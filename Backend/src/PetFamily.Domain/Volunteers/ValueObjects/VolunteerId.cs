@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Domain.Volunteers;
+﻿namespace PetFamily.Domain.Volunteers.ValueObjects;
 
 public record VolunteerId : IComparable<VolunteerId>
 {
@@ -6,7 +6,6 @@ public record VolunteerId : IComparable<VolunteerId>
     {
         Value = value;
     }
-    
     public Guid Value { get; }
 
     public static VolunteerId NewId() => new(Guid.NewGuid());

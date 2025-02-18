@@ -1,15 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace PetFamily.Domain.Volunteers;
+namespace PetFamily.Domain.Shared;
 
-public class SocialNetwork : ComparableValueObject
+public record SocialNetwork
 {
     public string Link { get; private set; }
     public string Title { get; private set; }
-
-    // for EF Core
-    private SocialNetwork() { }
-    
     private SocialNetwork(string link, string title)
     {
         Link = link;
@@ -23,15 +19,7 @@ public class SocialNetwork : ComparableValueObject
             
         if (string.IsNullOrWhiteSpace(title))
             return Result.Failure<SocialNetwork>($"{nameof(title)} is not be empty");
-
-        var socialNetwork = new SocialNetwork(link, title);
         
-        return Result.Success(socialNetwork);
-    }
-
-    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
-    {
-        yield return Link;
-        yield return Title;
+        return Result.Success(new SocialNetwork(link, title));
     }
 }

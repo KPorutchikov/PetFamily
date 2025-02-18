@@ -1,5 +1,4 @@
-﻿namespace PetFamily.Domain.Species;
-
+﻿namespace PetFamily.Domain.Species.ValueObjects;
 public record BreedId : IComparable<BreedId>
 {
     private BreedId(Guid value)
