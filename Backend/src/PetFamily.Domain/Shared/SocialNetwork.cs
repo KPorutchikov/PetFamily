@@ -4,8 +4,8 @@ namespace PetFamily.Domain.Shared;
 
 public record SocialNetwork
 {
-    public string Link { get; private set; }
-    public string Title { get; private set; }
+    public string Link { get; }
+    public string Title { get; }
     private SocialNetwork(string link, string title)
     {
         Link = link;
