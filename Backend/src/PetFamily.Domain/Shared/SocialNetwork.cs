@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Shared;
 
-public record SocialNetwork
+public class SocialNetwork : ComparableValueObject
 {
     public string Link { get; }
     public string Title { get; }
@@ -21,5 +21,11 @@ public record SocialNetwork
             return Result.Failure<SocialNetwork>($"{nameof(title)} is not be empty");
         
         return Result.Success(new SocialNetwork(link, title));
+    }
+
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Link;
+        yield return Title;
     }
 }

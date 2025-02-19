@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 namespace PetFamily.Domain.Volunteers.ValueObjects;
 
-public record PetStatus
+public class PetStatus : ComparableValueObject
 {
     public Status Value { get; }
     private PetStatus(Status value)
@@ -19,5 +19,10 @@ public record PetStatus
         NeedsHelp = 1,
         HomeSeeking = 2,
         FoundHome = 3
+    }
+
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Value; 
     }
 }
