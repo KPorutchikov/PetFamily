@@ -6,10 +6,8 @@ namespace PetFamily.Domain.Volunteers;
 public class Volunteer : Entity<VolunteerId>
 {
     private List<Pet> _pets = [];
-    private List<SocialNetwork> _socialNetworks = [];
-    
     public IReadOnlyList<Pet> Pets => _pets;
-    public IReadOnlyList<SocialNetwork> SocialNetwork => _socialNetworks;
+
     private Volunteer(VolunteerId id, string fullName, string email, string description, string phone, 
                         int experienceInYears, Requisites requisites) : base(id)
     {
@@ -24,16 +22,19 @@ public class Volunteer : Entity<VolunteerId>
     public string Email { get; private set; } = default!;
     public string Description { get; private set; } = default!;
     public string Phone { get; private set; } = default!;
-    public int ExperienceInYears { get; private set; }
+    public int? ExperienceInYears { get; private set; }
     public Requisites Requisites { get; private set; }
     public int NumberOfPets => _pets.Count;
+
+    public SocialNetworkDetails? SocialNetworkDetails { get; private set; }
+
     public int PetsFoundHome => _pets.Where(d => d.Status.Value == PetStatus.Status.FoundHome).Count();
     public int PetsSeekingHome => _pets.Where(d => d.Status.Value == PetStatus.Status.HomeSeeking).Count();
     public int PetsNeedHelp => _pets.Where(d => d.Status.Value == PetStatus.Status.NeedsHelp).Count();
     
-    public void AddSocialNetwork(SocialNetwork socialNetwork)
+    public void AddSocialNetworkDetails(SocialNetworkDetails socialNetworkDetails)
     {
-        _socialNetworks.Add(socialNetwork);
+        SocialNetworkDetails = socialNetworkDetails;
     }
 
     public void AddPet(Pet pet)
