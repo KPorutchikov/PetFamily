@@ -17,14 +17,16 @@ public class Pet : Entity<PetId>
     public DateOnly BirthDate { get; private set; }
     public bool IsVaccinated { get; private set; }
     public PetStatus Status { get; private set; }
-    public Requisites Requisites { get; private set; }
+
+    public RequisiteDetails? RequisitesDetails { get; private set; }
+
     public DateTime CreatedDate = DateTime.Now;
     
     // for EF Core
     private Pet(PetId id) : base(id) { }
     private Pet(PetId id, string name, PetBreed breed, string description, string color, float height, 
                 float weight, string healthInformation, Address address, string phone, bool isCastrated,
-                DateOnly birthDate, bool isVaccinated, PetStatus status, Requisites requisites) : base(id)
+                DateOnly birthDate, bool isVaccinated, PetStatus status) : base(id)
     {
         Name = name;
         Breed = breed;
@@ -39,18 +41,20 @@ public class Pet : Entity<PetId>
         BirthDate = birthDate;
         IsVaccinated = isVaccinated;
         Status = status;
-        Requisites = requisites;
     }
-
+    public void AddRequisiteDetails(RequisiteDetails requisitesDetails)
+    {
+        RequisitesDetails = requisitesDetails;
+    }
     public static Result<Pet> Create(PetId id, string name, PetBreed breed, string description, string color, float height, 
         float weight, string healthInformation, Address address, string phone, bool isCastrated,
-        DateOnly birthDate, bool isVaccinated, PetStatus status, Requisites requisites)
+        DateOnly birthDate, bool isVaccinated, PetStatus status)
     {
         if (string.IsNullOrWhiteSpace(name)) return Result.Failure<Pet>($"Pet name is not be empty");
         if (weight <= 0) return Result.Failure<Pet>("Pet weight should be more than zero");
         if (height <= 0) return Result.Failure<Pet>("Pet height should be more than zero");
         
         return Result.Success(new Pet(id, name, breed, description, color, height, weight, healthInformation, 
-                                    address, phone, isCastrated, birthDate, isVaccinated, status, requisites));
+                                    address, phone, isCastrated, birthDate, isVaccinated, status));
     }
 }

@@ -100,17 +100,20 @@ public class PetConfiguration: IEntityTypeConfiguration<Pet>
                 .HasColumnName("status");
         });
 
-        builder.ComplexProperty(p => p.Requisites, r =>
+        builder.OwnsOne(p => p.RequisitesDetails, r =>
         {
-            r.Property(x => x.Name)
-                .IsRequired()
-                .HasColumnName("requisites_name")
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
-            
-            r.Property(x => x.Description)
-                .IsRequired()
-                .HasColumnName("requisites_description")
-                .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+            r.ToJson();
+            r.OwnsMany(x => x.RequisitesList, n =>
+            {
+                n.Property(v => v.Name)
+                    .IsRequired()
+                    .HasColumnName("requisites_name")
+                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                n.Property(v => v.Description)
+                    .IsRequired()
+                    .HasColumnName("requisites_description")
+                    .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+            });
         });
         
         builder.Property(p => p.CreatedDate)

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetFamily.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,8 +34,7 @@ namespace PetFamily.Infrastructure.Migrations
                     description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     phone = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     experience_in_years = table.Column<int>(type: "integer", nullable: true),
-                    requisites_description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    requisites_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    RequisitesDetails = table.Column<string>(type: "jsonb", nullable: true),
                     SocialNetworkDetails = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
@@ -84,9 +83,8 @@ namespace PetFamily.Infrastructure.Migrations
                     address_street = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     breed_id = table.Column<Guid>(type: "uuid", nullable: false),
                     species_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    requisites_description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    requisites_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    status = table.Column<int>(type: "integer", nullable: false)
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    RequisitesDetails = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {

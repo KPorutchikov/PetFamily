@@ -46,17 +46,20 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             .HasForeignKey("volunteer_id")
             .OnDelete(DeleteBehavior.NoAction);
         
-        builder.ComplexProperty(p => p.Requisites, r =>
+        builder.OwnsOne(p => p.RequisitesDetails, r =>
         {
-            r.Property(n => n.Name)
-                .IsRequired()
-                .HasColumnName("requisites_name")
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
-
-            r.Property(n => n.Description)
-                .IsRequired()
-                .HasColumnName("requisites_description")
-                .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+            r.ToJson();
+            r.OwnsMany(x => x.RequisitesList, n =>
+            {
+                n.Property(v => v.Name)
+                    .IsRequired()
+                    .HasColumnName("requisites_name")
+                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                n.Property(v => v.Description)
+                    .IsRequired()
+                    .HasColumnName("requisites_description")
+                    .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+            });
         });
 
         builder.OwnsOne(p => p.SocialNetworkDetails, s =>
