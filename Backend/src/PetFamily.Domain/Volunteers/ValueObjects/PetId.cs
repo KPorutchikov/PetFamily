@@ -12,5 +12,7 @@ public record PetId : IComparable<PetId>
 
     public static PetId Empty() => new(Guid.Empty);
     
+    public static PetId Create(Guid id) => new(id);
+    
     public int CompareTo(PetId? other) => Value.CompareTo(other?.Value);
 }

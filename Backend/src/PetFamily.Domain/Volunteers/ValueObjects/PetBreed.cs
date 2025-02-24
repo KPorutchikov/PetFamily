@@ -6,16 +6,20 @@ public class PetBreed : ComparableValueObject
 {
     public Guid SpeciesId { get; }
     public Guid BreedId { get; }
-    private PetBreed(SpeciesId speciesId, BreedId breedId)
+
+    // for EF Core
+    private PetBreed() { }
+
+    private PetBreed(Guid speciesId, Guid breedId)
     {
-        SpeciesId = speciesId.Value;
-        BreedId = breedId.Value;
+        SpeciesId = speciesId;
+        BreedId = breedId;
     }
 
-    public static Result<PetBreed> Create(SpeciesId speciesId, BreedId breedId)
+    public static Result<PetBreed> Create(Guid speciesId, Guid breedId)
     {
-        if (speciesId is null) return Result.Failure<PetBreed>($"{nameof(speciesId)} cannot be null");
-        if (breedId is null) return Result.Failure<PetBreed>($"{nameof(breedId)} cannot be null");
+        if (speciesId == Guid.Empty) return Result.Failure<PetBreed>($"{nameof(speciesId)} cannot be null");
+        if (breedId == Guid.Empty) return Result.Failure<PetBreed>($"{nameof(breedId)} cannot be null");
         
         return Result.Success(new PetBreed(speciesId, breedId));
     }
