@@ -8,6 +8,9 @@ public class Volunteer : Entity<VolunteerId>
     private List<Pet> _pets = [];
     public IReadOnlyList<Pet> Pets => _pets;
 
+    // for EF Core
+    private Volunteer(VolunteerId id) : base(id) { }
+    
     private Volunteer(VolunteerId id, string fullName, string email, string description, string phone, 
                         int experienceInYears, Requisites requisites) : base(id)
     {

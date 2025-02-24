@@ -20,6 +20,8 @@ public class Pet : Entity<PetId>
     public Requisites Requisites { get; private set; }
     public DateTime CreatedDate = DateTime.Now;
     
+    // for EF Core
+    private Pet(PetId id) : base(id) { }
     private Pet(PetId id, string name, PetBreed breed, string description, string color, float height, 
                 float weight, string healthInformation, Address address, string phone, bool isCastrated,
                 DateOnly birthDate, bool isVaccinated, PetStatus status, Requisites requisites) : base(id)
