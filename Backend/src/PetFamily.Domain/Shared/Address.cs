@@ -4,8 +4,8 @@ namespace PetFamily.Domain.Shared;
 
 public class Address : ComparableValueObject
 {
-    public string City { get; } = default!;
-    public string Street { get; } = default!;
+    public string City { get; }
+    public string Street { get; }
     public string? HouseNumber { get; }
     public string? ApartmentNumber { get; }
 
@@ -17,25 +17,25 @@ public class Address : ComparableValueObject
         ApartmentNumber = apartmentNumber;
     }
 
-    public static Result<Address> Create(string city, string street, string houseNumber, string apartmentNumber)
+    public static Result<Address, Error> Create(string city, string street, string houseNumber, string apartmentNumber)
     {
         if (string.IsNullOrWhiteSpace(city))
-            return Result.Failure<Address>($"{nameof(city)} is not be empty");
+            return Errors.General.ValueIsInvalid("city");
         if (string.IsNullOrWhiteSpace(street))
-            return Result.Failure<Address>($"{nameof(street)} is not be empty");
+            return Errors.General.ValueIsInvalid("street");
         if (string.IsNullOrWhiteSpace(houseNumber))
-            return Result.Failure<Address>($"{nameof(houseNumber)} is not be empty");
+            return Errors.General.ValueIsInvalid("house number");
         if (string.IsNullOrWhiteSpace(apartmentNumber))
-            return Result.Failure<Address>($"{nameof(apartmentNumber)} is not be empty");
+            return Errors.General.ValueIsInvalid("apartment number");
 
-        return Result.Success(new Address(city, street, houseNumber, apartmentNumber));
+        return new Address(city, street, houseNumber, apartmentNumber);
     }
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
     {
         yield return City;
         yield return Street;
-        yield return HouseNumber == null ? "" : HouseNumber;
-        yield return ApartmentNumber == null ? "" : ApartmentNumber;
+        yield return HouseNumber ?? "";
+        yield return ApartmentNumber ?? "";
     }
 }

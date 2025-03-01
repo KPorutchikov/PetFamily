@@ -47,21 +47,21 @@ public class Volunteer : Entity<VolunteerId>
         _pets.Add(pet);
     }
     
-    public static Result<Volunteer> Create(VolunteerId volunteerId, string fullName, string email, string description, 
+    public static Result<Volunteer, Error> Create(VolunteerId volunteerId, string fullName, string email, string description, 
                                             string phone, int experienceInYears)
     {
         if (string.IsNullOrWhiteSpace(fullName))
-            return Result.Failure<Volunteer>($"{nameof(fullName)} is not be empty");
-            
+            return Errors.General.ValueIsInvalid("FullName"); 
+
         if (string.IsNullOrWhiteSpace(email))
-            return Result.Failure<Volunteer>($"{nameof(email)} is not be empty");
-        
+            return Errors.General.ValueIsInvalid("Email"); 
+
         if (string.IsNullOrWhiteSpace(description))
-            return Result.Failure<Volunteer>($"{nameof(description)} is not be empty");
-        
+            return Errors.General.ValueIsInvalid("Description"); 
+
         if (string.IsNullOrWhiteSpace(phone))
-            return Result.Failure<Volunteer>($"{nameof(phone)} is not be empty");
-        
-        return Result.Success(new Volunteer(volunteerId, fullName, email, description, phone, experienceInYears));
+            return Errors.General.ValueIsInvalid("Phone"); 
+
+        return new Volunteer(volunteerId, fullName, email, description, phone, experienceInYears);
     }
 }

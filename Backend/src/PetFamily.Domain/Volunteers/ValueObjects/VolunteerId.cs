@@ -14,5 +14,7 @@ public record VolunteerId : IComparable<VolunteerId>
 
     public static VolunteerId Create(Guid id) => new(id);
     
+    public static implicit operator Guid(VolunteerId id) => id.Value;
+    
     public int CompareTo(VolunteerId? other) => Value.CompareTo(other?.Value);
 }
