@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species.ValueObjects;
 
 namespace PetFamily.Domain.Species;
@@ -10,12 +11,11 @@ public class Breed : Entity<BreedId>
     {
         Name = name;
     }
-
-    public static Result<Breed> Create(BreedId id, string name)
+    public static Result<Breed, Error> Create(BreedId id, string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            return Result.Failure<Breed>("Name is not be empty");
+            return Errors.General.ValueIsInvalid("name");
         
-        return Result.Success(new Breed(id, name));
+        return new Breed(id, name);
     }
 }

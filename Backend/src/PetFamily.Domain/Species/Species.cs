@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species.ValueObjects;
 
 namespace PetFamily.Domain.Species;
@@ -23,11 +24,14 @@ public class Species: Entity<SpeciesId>
         _breeds.Add(breed);
     }
 
-    public static Result<Species> Create(SpeciesId id, string name, string title)
+    public static Result<Species, Error> Create(SpeciesId id, string name, string title)
     {
         if (string.IsNullOrWhiteSpace(name))
-            return Result.Failure<Species>($"{nameof(name)} is not be empty");
+            return Errors.General.ValueIsInvalid("name");
+        
+        if (string.IsNullOrWhiteSpace(title))
+            return Errors.General.ValueIsInvalid("title");
 
-        return Result.Success(new Species(id, name, title));
+        return new Species(id, name, title);
     }
 }

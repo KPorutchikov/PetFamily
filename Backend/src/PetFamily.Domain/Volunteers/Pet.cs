@@ -46,15 +46,15 @@ public class Pet : Entity<PetId>
     {
         RequisitesDetails = requisitesDetails;
     }
-    public static Result<Pet> Create(PetId id, string name, PetBreed breed, string description, string color, float height, 
+    public static Result<Pet, Error> Create(PetId id, string name, PetBreed breed, string description, string color, float height, 
         float weight, string healthInformation, Address address, string phone, bool isCastrated,
         DateOnly birthDate, bool isVaccinated, PetStatus status)
     {
-        if (string.IsNullOrWhiteSpace(name)) return Result.Failure<Pet>($"Pet name is not be empty");
-        if (weight <= 0) return Result.Failure<Pet>("Pet weight should be more than zero");
-        if (height <= 0) return Result.Failure<Pet>("Pet height should be more than zero");
+        if (string.IsNullOrWhiteSpace(name)) return Errors.General.ValueIsInvalid("name");
+        if (weight <= 0) return Errors.General.ValueIsInvalid("weight");
+        if (height <= 0) return Errors.General.ValueIsInvalid("height");
         
-        return Result.Success(new Pet(id, name, breed, description, color, height, weight, healthInformation, 
-                                    address, phone, isCastrated, birthDate, isVaccinated, status));
+        return new Pet(id, name, breed, description, color, height, weight, healthInformation, 
+                                    address, phone, isCastrated, birthDate, isVaccinated, status);
     }
 }

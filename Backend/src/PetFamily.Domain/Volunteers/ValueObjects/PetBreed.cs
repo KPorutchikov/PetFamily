@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species.ValueObjects;
 
 namespace PetFamily.Domain.Volunteers.ValueObjects;
@@ -16,12 +17,12 @@ public class PetBreed : ComparableValueObject
         BreedId = breedId;
     }
 
-    public static Result<PetBreed> Create(Guid speciesId, Guid breedId)
+    public static Result<PetBreed, Error> Create(Guid speciesId, Guid breedId)
     {
-        if (speciesId == Guid.Empty) return Result.Failure<PetBreed>($"{nameof(speciesId)} cannot be null");
-        if (breedId == Guid.Empty) return Result.Failure<PetBreed>($"{nameof(breedId)} cannot be null");
+        if (speciesId == Guid.Empty) return Errors.General.ValueIsRequired("speciesId");
+        if (breedId == Guid.Empty) return Errors.General.ValueIsRequired("breedId");
         
-        return Result.Success(new PetBreed(speciesId, breedId));
+        return new PetBreed(speciesId, breedId);
     }
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()

@@ -12,15 +12,15 @@ public class SocialNetwork : ComparableValueObject
         Title = title;
     }
 
-    public static Result<SocialNetwork> Create(string link, string title)
+    public static Result<SocialNetwork, Error> Create(string link, string title)
     {
         if (string.IsNullOrWhiteSpace(link))
-            return Result.Failure<SocialNetwork>($"{nameof(link)} is not be empty");
+            return Errors.General.ValueIsInvalid("link");
             
         if (string.IsNullOrWhiteSpace(title))
-            return Result.Failure<SocialNetwork>($"{nameof(title)} is not be empty");
+            return Errors.General.ValueIsInvalid("title");
         
-        return Result.Success(new SocialNetwork(link, title));
+        return new SocialNetwork(link, title);
     }
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
