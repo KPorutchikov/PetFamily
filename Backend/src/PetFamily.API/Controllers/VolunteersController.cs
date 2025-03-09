@@ -7,18 +7,19 @@ namespace PetFamily.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class VolunteersController: ControllerBase
+public class VolunteersController : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromServices] CreateVolunteerHandler handler,
-                                                [FromBody] CreateVolunteerRequest request,
-                                                CancellationToken cancellationToken = default)
+    public async Task<ActionResult> Create(
+        [FromServices] CreateVolunteerHandler handler,
+        [FromBody] CreateVolunteerRequest request,
+        CancellationToken cancellationToken = default)
     {
         var result = await handler.Handle(request, cancellationToken);
-
+        
         if (result.IsFailure)
             return result.Error.ToResponse();
-        
-        return Ok(result.Value);
+
+        return CreatedAtAction("", result.Value);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using PetFamily.Application.Volunteers;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Domain.Shared;
@@ -10,6 +11,7 @@ namespace PetFamily.Application;
 public class CreateVolunteerHandler
 {
     private readonly IVolunteerRepository _volunteerRepository;
+    private readonly IValidator<CreateVolunteerRequest> _validator;
 
     public CreateVolunteerHandler(IVolunteerRepository volunteerRepository)
     {
@@ -18,13 +20,20 @@ public class CreateVolunteerHandler
 
     public async Task<Result<Guid, Error>> Handle(CreateVolunteerRequest request, CancellationToken ct = default)
     {
+        var email = Email.Create(request.Email).Value;
+
         var volunteer = await _volunteerRepository.GetByFullName(request.FullName, ct);
 
         if (volunteer.IsSuccess)
             return Errors.Volunteer.AlreadyExist();
-        
-        var volunteerResult = Volunteer.Create(VolunteerId.NewId(), request.FullName, request.Email,request.Description, 
-                                                request.Phone, request.ExperienceInYears);
+
+        var volunteerResult = Volunteer.Create(
+            VolunteerId.NewId(),
+            request.FullName,
+            email,
+            request.Description,
+            request.Phone,
+            request.ExperienceInYears);
 
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
