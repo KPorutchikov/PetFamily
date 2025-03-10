@@ -16,11 +16,11 @@ public class Volunteer : Entity<VolunteerId>
 
     private Volunteer(
         VolunteerId id,
-        string fullName,
+        FullName fullName,
         Email email,
-        string description,
-        string phone,
-        int experienceInYears) : base(id)
+        Description description,
+        Phone phone,
+        ExperienceInYears experienceInYears) : base(id)
     {
         FullName = fullName;
         Email = email;
@@ -29,11 +29,11 @@ public class Volunteer : Entity<VolunteerId>
         ExperienceInYears = experienceInYears;
     }
 
-    public string FullName { get; private set; } = default!;
+    public FullName FullName { get; private set; } = default!;
     public Email Email { get; private set; } = default!;
-    public string Description { get; private set; } = default!;
-    public string Phone { get; private set; } = default!;
-    public int? ExperienceInYears { get; private set; }
+    public Description Description { get; private set; } = default!;
+    public Phone Phone { get; private set; } = default!;
+    public ExperienceInYears ExperienceInYears { get; private set; }
     public RequisiteDetails? RequisitesDetails { get; private set; }
     public int NumberOfPets => _pets.Count;
     public SocialNetworkDetails? SocialNetworkDetails { get; private set; }
@@ -59,21 +59,12 @@ public class Volunteer : Entity<VolunteerId>
 
     public static Result<Volunteer, Error> Create(
         VolunteerId volunteerId,
-        string fullName,
+        FullName fullName,
         Email email,
-        string description,
-        string phone,
-        int experienceInYears)
+        Description description,
+        Phone phone,
+        ExperienceInYears experienceInYears)
     {
-        // if (string.IsNullOrWhiteSpace(fullName))
-        //     return Errors.General.ValueIsInvalid("FullName");
-        //
-        // if (string.IsNullOrWhiteSpace(description))
-        //     return Errors.General.ValueIsInvalid("Description");
-        //
-        // if (string.IsNullOrWhiteSpace(phone))
-        //     return Errors.General.ValueIsInvalid("Phone");
-
         return new Volunteer(volunteerId, fullName, email, description, phone, experienceInYears);
     }
 }

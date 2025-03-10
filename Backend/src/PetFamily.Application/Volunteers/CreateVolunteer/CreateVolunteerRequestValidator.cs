@@ -8,10 +8,10 @@ public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteer
 {
     public CreateVolunteerRequestValidator()
     {
+        RuleFor(v => v.FullName).MustBeValueObject(FullName.Create);
         RuleFor(v => v.Email).MustBeValueObject(Email.Create);
-        // RuleFor(v => v.FullName).NotEmpty().MaximumLength(100);
-        // RuleFor(v => v.Phone).NotEmpty().MinimumLength(9);
-        // RuleFor(v => v.Description).MaximumLength(500);
-        // RuleFor(v => v.ExperienceInYears).InclusiveBetween(0, 50);
+        RuleFor(v => v.Description).MustBeValueObject(Description.Create);
+        RuleFor(v => v.Phone).MustBeValueObject(Phone.Create);
+        RuleFor(v => v.ExperienceInYears).MustBeValueObject(ExperienceInYears.Create);
     }
 }

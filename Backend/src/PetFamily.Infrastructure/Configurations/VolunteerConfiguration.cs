@@ -4,7 +4,6 @@ using PetFamily.Domain.Volunteers;
 using PetFamily.Domain.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
 
-
 namespace PetFamily.Infrastructure.Configurations;
 
 public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
@@ -16,10 +15,13 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         builder.Property(p => p.Id)
             .HasConversion(id => id.Value, value => VolunteerId.Create(value));
 
-        builder.Property(p => p.FullName)
-            .IsRequired()
-            .HasColumnName("full_name")
-            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+        builder.ComplexProperty(p => p.FullName, e =>
+        {
+            e.Property(p => p.Value)
+                .IsRequired(true)
+                .HasColumnName("full_name")
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+        });
 
         builder.ComplexProperty(p => p.Email, e =>
         {
@@ -29,19 +31,28 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
         });
 
-        builder.Property(p => p.Phone)
-            .IsRequired()
-            .HasColumnName("phone")
-            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+        builder.ComplexProperty(p => p.Phone, e =>
+        {
+            e.Property(p => p.Value)
+                .IsRequired(true)
+                .HasColumnName("phone")
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+        });
 
-        builder.Property(p => p.Description)
-            .IsRequired(false)
-            .HasColumnName("description")
-            .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+        builder.ComplexProperty(p => p.Description, e =>
+        {
+            e.Property(p => p.Value)
+                .IsRequired(true)
+                .HasColumnName("description")
+                .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+        });
 
-        builder.Property(p => p.ExperienceInYears)
-            .IsRequired(false)
-            .HasColumnName("experience_in_years");
+        builder.ComplexProperty(p => p.ExperienceInYears, e =>
+        {
+            e.Property(p => p.Value)
+                .IsRequired(true)
+                .HasColumnName("experience_in_years");
+        });
 
         builder.HasMany(p => p.Pets)
             .WithOne()

@@ -5,4 +5,4 @@ public record CreateVolunteerRequest(
     string Email,
     string Description,
     string Phone,
-    int ExperienceInYears);
+    string ExperienceInYears);

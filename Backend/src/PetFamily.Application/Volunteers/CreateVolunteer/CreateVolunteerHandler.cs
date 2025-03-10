@@ -20,7 +20,11 @@ public class CreateVolunteerHandler
 
     public async Task<Result<Guid, Error>> Handle(CreateVolunteerRequest request, CancellationToken ct = default)
     {
+        var fullName = FullName.Create(request.FullName).Value;
         var email = Email.Create(request.Email).Value;
+        var description = Description.Create(request.Description).Value;
+        var phone = Phone.Create(request.Phone).Value;
+        var experienceInYears = ExperienceInYears.Create(request.ExperienceInYears).Value;
 
         var volunteer = await _volunteerRepository.GetByFullName(request.FullName, ct);
 
@@ -29,11 +33,11 @@ public class CreateVolunteerHandler
 
         var volunteerResult = Volunteer.Create(
             VolunteerId.NewId(),
-            request.FullName,
+            fullName,
             email,
-            request.Description,
-            request.Phone,
-            request.ExperienceInYears);
+            description,
+            phone,
+            experienceInYears);
 
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
