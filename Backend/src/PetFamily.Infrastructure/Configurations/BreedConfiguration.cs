@@ -6,14 +6,14 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configurations;
 
-public class BreedConfiguration:IEntityTypeConfiguration<Breed>
+public class BreedConfiguration : IEntityTypeConfiguration<Breed>
 {
     public void Configure(EntityTypeBuilder<Breed> builder)
     {
         builder.ToTable("breed");
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)
-            .HasConversion( id => id.Value, 
+               .HasConversion(id => id.Value,
                 value => BreedId.Create(value));
 
         builder.Property(p => p.Name)
