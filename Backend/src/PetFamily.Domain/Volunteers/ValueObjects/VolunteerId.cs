@@ -1,20 +1,25 @@
-﻿namespace PetFamily.Domain.Volunteers.ValueObjects;
+﻿using CSharpFunctionalExtensions;
 
-public record VolunteerId : IComparable<VolunteerId>
+namespace PetFamily.Domain.Volunteers.ValueObjects;
+
+public class VolunteerId : ComparableValueObject
 {
+    public Guid Value { get; }
     private VolunteerId(Guid value)
     {
         Value = value;
     }
-    public Guid Value { get; }
 
     public static VolunteerId NewId() => new(Guid.NewGuid());
 
     public static VolunteerId Empty() => new(Guid.Empty);
 
     public static VolunteerId Create(Guid id) => new(id);
-    
+
     public static implicit operator Guid(VolunteerId id) => id.Value;
-    
-    public int CompareTo(VolunteerId? other) => Value.CompareTo(other?.Value);
+
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Value;
+    }
 }
