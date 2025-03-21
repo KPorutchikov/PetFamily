@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using FluentValidation;
+using Microsoft.Extensions.Logging;
 using PetFamily.Application.Volunteers;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Domain.Shared;
@@ -11,11 +11,12 @@ namespace PetFamily.Application;
 public class CreateVolunteerHandler
 {
     private readonly IVolunteerRepository _volunteerRepository;
-    private readonly IValidator<CreateVolunteerRequest> _validator;
+    private readonly ILogger<CreateVolunteerHandler> _logger;
 
-    public CreateVolunteerHandler(IVolunteerRepository volunteerRepository)
+    public CreateVolunteerHandler(IVolunteerRepository volunteerRepository, ILogger<CreateVolunteerHandler> logger)
     {
         _volunteerRepository = volunteerRepository;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, Error>> Handle(CreateVolunteerRequest request, CancellationToken ct = default)
@@ -29,10 +30,15 @@ public class CreateVolunteerHandler
         var volunteer = await _volunteerRepository.GetByFullName(request.FullName, ct);
 
         if (volunteer.IsSuccess)
+        {
+            _logger.LogError("Failed to create. Volunteer is exists: {fullName}", fullName.Value);
             return Errors.Volunteer.AlreadyExist();
+        }
 
+        var volunteerId = VolunteerId.NewId();
+        
         var volunteerResult = Volunteer.Create(
-            VolunteerId.NewId(),
+            volunteerId,
             fullName,
             email,
             description,
@@ -40,9 +46,14 @@ public class CreateVolunteerHandler
             experienceInYears);
 
         if (volunteerResult.IsFailure)
+        {
+            _logger.LogError("Failed to create volunteer: {@error}", volunteerResult.Error);
             return volunteerResult.Error;
+        }
 
         await _volunteerRepository.Add(volunteerResult.Value, ct);
+        
+        _logger.LogInformation("Created volunteer [{fullName}] with [{@volunteer}]", fullName.Value, volunteerResult.Value);
 
         return (Guid)volunteerResult.Value.Id;
     }

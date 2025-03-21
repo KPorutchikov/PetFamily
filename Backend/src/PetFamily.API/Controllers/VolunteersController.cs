@@ -15,6 +15,7 @@ public class VolunteersController : ControllerBase
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
+
         var result = await handler.Handle(request, cancellationToken);
 
         return result.ToResponse();

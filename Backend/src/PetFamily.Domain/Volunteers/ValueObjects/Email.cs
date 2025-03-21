@@ -4,7 +4,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Volunteers.ValueObjects;
 
-public record Email
+public class Email : ComparableValueObject
 {
     public string Value { get; }
 
@@ -25,5 +25,10 @@ public record Email
             return Errors.General.ValueIsInvalid("email");
 
         return new Email(value);
+    }
+
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Value;
     }
 }

@@ -8,6 +8,13 @@ namespace PetFamily.API.Validation;
 
 public class CustomResultFactory : IFluentValidationAutoValidationResultFactory
 {
+    private readonly ILogger<CustomResultFactory> _logger;
+
+    public CustomResultFactory(ILogger<CustomResultFactory> logger)
+    {
+        _logger = logger;
+    }
+        
     public IActionResult CreateActionResult(
         ActionExecutingContext context,
         ValidationProblemDetails? validationProblemDetails)
@@ -30,6 +37,8 @@ public class CustomResultFactory : IFluentValidationAutoValidationResultFactory
 
         var envelope = Envelope.Error(errors);
 
+        _logger.LogError("Error of validation {@errors}", envelope.Errors);
+        
         return new ObjectResult(envelope)
         {
             StatusCode = StatusCodes.Status400BadRequest

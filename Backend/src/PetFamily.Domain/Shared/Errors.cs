@@ -27,7 +27,7 @@ public static class Errors
     {
         public static Error AlreadyExist()
         {
-            return Error.Validation("record.already.exist", "Volunteer already exist");
+            return Error.Validation("record.already.exist", "volunteer already exist");
         }
     }
 }

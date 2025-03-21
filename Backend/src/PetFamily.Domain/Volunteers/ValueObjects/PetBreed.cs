@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Species.ValueObjects;
 
 namespace PetFamily.Domain.Volunteers.ValueObjects;
 public class PetBreed : ComparableValueObject

@@ -1,13 +1,15 @@
-﻿namespace PetFamily.Domain.Species.ValueObjects;
+﻿using CSharpFunctionalExtensions;
 
-public record SpeciesId : IComparable<SpeciesId>
+namespace PetFamily.Domain.Species.ValueObjects;
+
+public class SpeciesId : ComparableValueObject
 {
+    public Guid Value { get; }
+    
     private SpeciesId(Guid value)
     {
         Value = value;
     }
-    
-    public Guid Value { get; }
 
     public static SpeciesId NewId() => new(Guid.NewGuid());
 
@@ -15,5 +17,8 @@ public record SpeciesId : IComparable<SpeciesId>
 
     public static SpeciesId Create(Guid id) => new(id);
 
-    public int CompareTo(SpeciesId? other) => Value.CompareTo(other?.Value);
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Value;
+    }
 }

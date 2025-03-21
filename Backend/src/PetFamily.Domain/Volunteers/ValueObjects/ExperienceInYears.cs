@@ -3,7 +3,7 @@ using CSharpFunctionalExtensions;
 
 namespace PetFamily.Domain.Volunteers.ValueObjects;
 
-public record ExperienceInYears
+public class ExperienceInYears : ComparableValueObject
 {
     public string Value { get; }
 
@@ -20,6 +20,18 @@ public record ExperienceInYears
         if (string.IsNullOrWhiteSpace(value))
             return Errors.General.ValueIsRequired("experience_in_years");
 
+        var resultNum = int.TryParse(value, out var experienceInYears);
+        if (!resultNum)
+            return Errors.General.ValueIsInvalid("experience_in_years");
+
+        if (experienceInYears < 0)
+            return Errors.General.ValueIsInvalid("experience_in_years must be positive; value");
+        
         return new ExperienceInYears(value);
+    }
+
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Value;
     }
 }
