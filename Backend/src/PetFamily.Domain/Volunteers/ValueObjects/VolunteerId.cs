@@ -16,6 +16,8 @@ public class VolunteerId : ComparableValueObject
 
     public static VolunteerId Create(Guid id) => new(id);
 
+    public static implicit operator VolunteerId(Guid id) => new(id);
+    
     public static implicit operator Guid(VolunteerId id) => id.Value;
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()

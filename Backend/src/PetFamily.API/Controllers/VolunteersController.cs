@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.Application;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.UpdateMainInfo;
+using PetFamily.Application.Volunteers.UpdateRequisiteDetails;
+using PetFamily.Application.Volunteers.UpdateSocialNetwork;
 
 namespace PetFamily.API.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class VolunteersController : ControllerBase
+public class VolunteersController : ApplicationController
 {
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
@@ -15,9 +17,66 @@ public class VolunteersController : ControllerBase
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
-
         var result = await handler.Handle(request, cancellationToken);
 
         return result.ToResponse();
+    }
+
+    [HttpPut("{id:guid}/social-networks")]
+    public async Task<ActionResult> UpdateSocialNetworks(
+        [FromRoute] Guid id,
+        [FromServices] UpdateSocialNetworkHandler handler,
+        [FromBody] IList<UpdateSocialNetworkDto> dto,
+        [FromServices] IValidator<UpdateSocialNetworkRequest> validator,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new UpdateSocialNetworkRequest(id, dto);
+
+        var result = await handler.Handle(request, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpPut("{id:guid}/requisite-details")]
+    public async Task<ActionResult> UpdateRequisiteDetails(
+        [FromRoute] Guid id,
+        [FromServices] UpdateRequisiteDetailsHandler handler,
+        [FromBody] IList<UpdateRequisiteDetailsDto> dto,
+        [FromServices] IValidator<UpdateRequisiteDetailsRequest> validator,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new UpdateRequisiteDetailsRequest(id, dto);
+
+        var result = await handler.Handle(request, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpPut("{id:guid}/main-info")]
+    public async Task<ActionResult> UpdateMainInfo(
+        [FromRoute] Guid id,
+        [FromServices] UpdateMainInfoHandler handler,
+        [FromBody] UpdateMainInfoDto dto,
+        [FromServices] IValidator<UpdateMainInfoRequest> validator,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new UpdateMainInfoRequest(id, dto);
+
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        if (validationResult.IsValid == false)
+            return validationResult.ToValidationErrorResponse();
+
+        var result = await handler.Handle(request, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
     }
 }
