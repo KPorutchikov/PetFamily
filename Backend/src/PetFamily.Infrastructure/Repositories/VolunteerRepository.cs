@@ -7,7 +7,7 @@ using PetFamily.Domain.Volunteers.ValueObjects;
 
 namespace PetFamily.Infrastructure.Repositories;
 
-public class VolunteerRepository: IVolunteerRepository
+public class VolunteerRepository : IVolunteerRepository
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -16,36 +16,47 @@ public class VolunteerRepository: IVolunteerRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Guid>  Add(Volunteer volunteer, CancellationToken cancellationToken = default)
+    public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         await _dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
-        
+
         await _dbContext.SaveChangesAsync(cancellationToken);
-        
+
         return volunteer.Id;
     }
 
-    public async Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken = default)
+    public async Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken = default)
+    {
+        _dbContext.Volunteers.Attach(volunteer);
+        
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return volunteer.Id.Value;
+    }
+
+    public async Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId,
+        CancellationToken cancellationToken = default)
     {
         var volunteer = await _dbContext.Volunteers
-                        .Include(p => p.Pets)
-                        .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
-        
+            .Include(p => p.Pets)
+            .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
+
         if (volunteer == null)
             return Errors.General.NotFound(volunteerId);
-        
+
         return volunteer;
     }
-    
-    public async Task<Result<Volunteer, Error>> GetByFullName(string fullName, CancellationToken cancellationToken = default)
+
+    public async Task<Result<Volunteer, Error>> GetByFullName(string fullName,
+        CancellationToken cancellationToken = default)
     {
         var volunteer = await _dbContext.Volunteers
             .Include(p => p.Pets)
             .FirstOrDefaultAsync(v => v.FullName.Value == fullName, cancellationToken);
-        
+
         if (volunteer == null)
             return Errors.General.NotFound();
-        
+
         return volunteer;
     }
 }

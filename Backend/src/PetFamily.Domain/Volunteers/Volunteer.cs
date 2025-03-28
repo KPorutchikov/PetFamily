@@ -56,7 +56,16 @@ public class Volunteer : Entity<VolunteerId>
     {
         _pets.Add(pet);
     }
-
+    
+    public void UpdateMainInfo(FullName fullName, Description description, Email email, Phone phone, ExperienceInYears experienceInYears)
+    {
+        FullName = fullName;
+        Description = description;
+        Email = email;
+        Phone = phone;
+        ExperienceInYears = experienceInYears;
+    }
+    
     public static Result<Volunteer, Error> Create(
         VolunteerId volunteerId,
         FullName fullName,
