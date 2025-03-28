@@ -26,11 +26,11 @@ public class VolunteersController : ApplicationController
     public async Task<ActionResult> UpdateSocialNetworks(
         [FromRoute] Guid id,
         [FromServices] UpdateSocialNetworkHandler handler,
-        [FromBody] IList<UpdateSocialNetworkDto> dto,
+        [FromBody] UpdateSocialNetworkRequest socialNetworks,
         [FromServices] IValidator<UpdateSocialNetworkRequest> validator,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateSocialNetworkRequest(id, dto);
+        var request = new UpdateSocialNetworkRequest(id, socialNetworks.Dto);
 
         var result = await handler.Handle(request, cancellationToken);
 
@@ -44,11 +44,11 @@ public class VolunteersController : ApplicationController
     public async Task<ActionResult> UpdateRequisiteDetails(
         [FromRoute] Guid id,
         [FromServices] UpdateRequisiteDetailsHandler handler,
-        [FromBody] IList<UpdateRequisiteDetailsDto> dto,
+        [FromBody] UpdateRequisiteDetailsRequest requisiteDetails,
         [FromServices] IValidator<UpdateRequisiteDetailsRequest> validator,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateRequisiteDetailsRequest(id, dto);
+        var request = new UpdateRequisiteDetailsRequest(id, requisiteDetails.Dto);
 
         var result = await handler.Handle(request, cancellationToken);
 
