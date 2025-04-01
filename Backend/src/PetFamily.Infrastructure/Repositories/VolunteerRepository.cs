@@ -28,10 +28,28 @@ public class VolunteerRepository : IVolunteerRepository
     public async Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         _dbContext.Volunteers.Attach(volunteer);
-        
+
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return volunteer.Id.Value;
+        return volunteer.Id;
+    }
+
+    public async Task<Guid> SoftDelete(Volunteer volunteer, CancellationToken cancellationToken = default)
+    {
+        volunteer.Delete();
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return volunteer.Id;
+    }
+
+    public async Task<Guid> HardDelete(Volunteer volunteer, CancellationToken cancellationToken = default)
+    {
+        _dbContext.Volunteers.Remove(volunteer);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return volunteer.Id;
     }
 
     public async Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId,

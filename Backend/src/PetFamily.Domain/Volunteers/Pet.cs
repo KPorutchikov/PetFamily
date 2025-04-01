@@ -4,6 +4,7 @@ using PetFamily.Domain.Volunteers.ValueObjects;
 namespace PetFamily.Domain.Volunteers;
 public class Pet : Entity<PetId>
 {
+    private bool _isDeleted = false;
     public string Name { get; private set; }
     public PetBreed Breed { get; private set; }
     public string Description { get; private set; }
@@ -45,6 +46,17 @@ public class Pet : Entity<PetId>
     public void AddRequisiteDetails(RequisiteDetails requisitesDetails)
     {
         RequisitesDetails = requisitesDetails;
+    }
+    
+    public void SoftDelete()
+    {
+        _isDeleted = true;
+    }
+
+    public void Restore()
+    {
+        if (_isDeleted)
+            _isDeleted = false;
     }
     public static Result<Pet, Error> Create(PetId id, string name, PetBreed breed, string description, string color, float height, 
         float weight, string healthInformation, Address address, string phone, bool isCastrated,

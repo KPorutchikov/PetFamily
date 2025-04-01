@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PetFamily.Infrastructure.Configurations;
 
-public class PetConfiguration: IEntityTypeConfiguration<Pet>
+public class PetConfiguration : IEntityTypeConfiguration<Pet>
 {
     public void Configure(EntityTypeBuilder<Pet> builder)
     {
         builder.ToTable("pets");
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)
-            .HasConversion( id => id.Value,
+            .HasConversion(id => id.Value,
                 value => PetId.Create(value));
 
         builder.Property(p => p.Name)
@@ -31,7 +31,7 @@ public class PetConfiguration: IEntityTypeConfiguration<Pet>
                 .IsRequired()
                 .HasColumnName("breed_id");
         });
-        
+
         builder.Property(p => p.Description)
             .IsRequired()
             .HasColumnName("description")
@@ -45,7 +45,7 @@ public class PetConfiguration: IEntityTypeConfiguration<Pet>
         builder.Property(p => p.Weight)
             .IsRequired()
             .HasColumnName("weight");
-        
+
         builder.Property(p => p.Height)
             .IsRequired()
             .HasColumnName("height");
@@ -70,17 +70,17 @@ public class PetConfiguration: IEntityTypeConfiguration<Pet>
             a.Property(x => x.HouseNumber)
                 .IsRequired(false)
                 .HasColumnName("address_house_number");
-            
+
             a.Property(x => x.ApartmentNumber)
                 .IsRequired(false)
                 .HasColumnName("address_apartment_number");
         });
-        
+
         builder.Property(p => p.Phone)
             .IsRequired()
             .HasColumnName("phone")
             .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
-        
+
         builder.Property(p => p.IsCastrated)
             .IsRequired()
             .HasColumnName("is_castrated");
@@ -115,9 +115,13 @@ public class PetConfiguration: IEntityTypeConfiguration<Pet>
                     .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
             });
         });
-        
+
         builder.Property(p => p.CreatedDate)
             .IsRequired()
             .HasColumnName("created_date");
+
+        builder.Property<bool>("_isDeleted")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("is_deleted");
     }
 }

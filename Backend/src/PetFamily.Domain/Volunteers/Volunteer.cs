@@ -6,6 +6,7 @@ namespace PetFamily.Domain.Volunteers;
 
 public class Volunteer : Entity<VolunteerId>
 {
+    private bool _isDeleted = false;
     private List<Pet> _pets = [];
     public IReadOnlyList<Pet> Pets => _pets;
 
@@ -56,8 +57,9 @@ public class Volunteer : Entity<VolunteerId>
     {
         _pets.Add(pet);
     }
-    
-    public void UpdateMainInfo(FullName fullName, Description description, Email email, Phone phone, ExperienceInYears experienceInYears)
+
+    public void UpdateMainInfo(FullName fullName, Description description, Email email, Phone phone,
+        ExperienceInYears experienceInYears)
     {
         FullName = fullName;
         Description = description;
@@ -65,7 +67,31 @@ public class Volunteer : Entity<VolunteerId>
         Phone = phone;
         ExperienceInYears = experienceInYears;
     }
-    
+
+    public void Delete()
+    {
+        if (_isDeleted == false)
+        {
+            _isDeleted = true;
+            foreach (var pet in _pets)
+            {
+                pet.SoftDelete();
+            }
+        }
+    }
+
+    public void Restore()
+    {
+        if (_isDeleted)
+        {
+            _isDeleted = false;
+            foreach (var pet in _pets)
+            {
+                pet.Restore();
+            }
+        }
+    }
+
     public static Result<Volunteer, Error> Create(
         VolunteerId volunteerId,
         FullName fullName,

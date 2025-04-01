@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.Application;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateRequisiteDetails;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork;
@@ -74,6 +75,38 @@ public class VolunteersController : ApplicationController
 
         var result = await handler.Handle(request, cancellationToken);
 
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpDelete("{id:guid}/soft")]
+    public async Task<ActionResult> SoftDelete(
+        [FromRoute] Guid id,
+        [FromServices] DeleteVolunteerSoftHandler handler,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var request = new DeleteVolunteerRequest(id);
+
+        var result = await handler.Handle(request, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpDelete("{id:guid}/hard")]
+    public async Task<ActionResult> HardDelete(
+        [FromRoute] Guid id,
+        [FromServices] DeleteVolunteerHardHandler handler,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var request = new DeleteVolunteerRequest(id);
+
+        var result = await handler.Handle(request, cancellationToken);
         if (result.IsFailure)
             return result.Error.ToResponse();
 
