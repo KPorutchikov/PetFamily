@@ -9,6 +9,5 @@ public class DeleteVolunteerRequestValidator : AbstractValidator<DeleteVolunteer
     public DeleteVolunteerRequestValidator()
     {
         RuleFor(d => d.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired("VolunteerId"));
-        RuleFor(d => d.DeletionOptions).IsInEnum().WithError(Errors.General.ValueIsInvalid("DeletionOptions"));
     }
 }

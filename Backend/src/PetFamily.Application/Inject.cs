@@ -15,7 +15,8 @@ public static class Inject
         services.AddScoped<UpdateMainInfoHandler>();
         services.AddScoped<UpdateSocialNetworkHandler>();
         services.AddScoped<UpdateRequisiteDetailsHandler>();
-        services.AddScoped<DeleteVolunteerHandler>();
+        services.AddScoped<DeleteVolunteerSoftHandler>();
+        services.AddScoped<DeleteVolunteerHardHandler>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
         return services;

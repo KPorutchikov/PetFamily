@@ -5,14 +5,14 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.Delete;
 
-public class DeleteVolunteerHandler
+public class DeleteVolunteerSoftHandler
 {
     private readonly IVolunteerRepository _volunteerRepository;
-    private readonly ILogger<DeleteVolunteerHandler> _logger;
+    private readonly ILogger<DeleteVolunteerSoftHandler> _logger;
 
-    public DeleteVolunteerHandler(
+    public DeleteVolunteerSoftHandler(
         IVolunteerRepository volunteerRepository,
-        ILogger<DeleteVolunteerHandler> logger)
+        ILogger<DeleteVolunteerSoftHandler> logger)
     {
         _volunteerRepository = volunteerRepository;
         _logger = logger;
@@ -26,23 +26,10 @@ public class DeleteVolunteerHandler
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
 
+        var result = await _volunteerRepository.SoftDelete(volunteerResult.Value, ct);
 
-        var result = request.DeletionOptions switch
-        {
-            DeletionOptions.Hard => await _volunteerRepository.HardDelete(volunteerResult.Value, ct),
-            DeletionOptions.Soft => await _volunteerRepository.SoftDelete(volunteerResult.Value, ct),
-            _ => throw new NotImplementedException("Invalid deletion option")
-
-        };
-
-        _logger.LogInformation("Volunteer was deleted with id: {Id}.", request.VolunteerId);
+        _logger.LogInformation("Volunteer was deleted (soft) with id: {Id}.", request.VolunteerId);
 
         return result;
     }
-}
-
-public enum DeletionOptions
-{
-    Soft,
-    Hard
 }
