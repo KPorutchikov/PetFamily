@@ -99,6 +99,13 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .IsRequired()
                 .HasColumnName("status");
         });
+        
+        builder.ComplexProperty(p => p.SerialNumber, s =>
+        {
+            s.Property(x => x.Value)
+                .IsRequired()
+                .HasColumnName("serial_number");
+        });
 
         builder.OwnsOne(p => p.RequisitesDetails, r =>
         {

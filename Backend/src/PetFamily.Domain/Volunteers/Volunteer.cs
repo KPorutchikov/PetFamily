@@ -53,9 +53,33 @@ public class Volunteer : Entity<VolunteerId>
         SocialNetworkDetails = socialNetworkDetails;
     }
 
-    public void AddPet(Pet pet)
+    public UnitResult<Error> AddPet(Pet pet)
     {
+        var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
+        if (serialNumberResult.IsFailure)
+            return serialNumberResult.Error;
+
+        pet.SetSerialNumber(serialNumberResult.Value);
+
         _pets.Add(pet);
+        return Result.Success<Error>();
+    }
+
+    public UnitResult<Error> MovePet(Pet pet, SerialNumber serialNumber)
+    {
+        if (_pets.Count < serialNumber.Value)
+            return Errors.General.ValueIsInvalid("serialNumber");
+
+        int incriment = pet.SerialNumber.Value > serialNumber.Value ? -1 : 1;
+
+        while (pet.SerialNumber.Value != serialNumber.Value)
+        {
+            _pets.FirstOrDefault(d => d.SerialNumber.Value == (pet.SerialNumber.Value + incriment))!
+                .SetSerialNumber(SerialNumber.Create(pet.SerialNumber.Value).Value);
+
+            pet.SetSerialNumber(SerialNumber.Create(pet.SerialNumber.Value + incriment).Value);
+        }
+        return Result.Success<Error>();
     }
 
     public void UpdateMainInfo(FullName fullName, Description description, Email email, Phone phone,

@@ -1,7 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers.ValueObjects;
+
 namespace PetFamily.Domain.Volunteers;
+
 public class Pet : Entity<PetId>
 {
     private bool _isDeleted = false;
@@ -18,16 +20,19 @@ public class Pet : Entity<PetId>
     public DateOnly BirthDate { get; private set; }
     public bool IsVaccinated { get; private set; }
     public PetStatus Status { get; private set; }
-
+    public SerialNumber SerialNumber { get; private set; }
     public RequisiteDetails? RequisitesDetails { get; private set; }
 
     public DateTime CreatedDate = DateTime.Now;
-    
+
     // for EF Core
-    private Pet(PetId id) : base(id) { }
-    private Pet(PetId id, string name, PetBreed breed, string description, string color, float height, 
-                float weight, string healthInformation, Address address, string phone, bool isCastrated,
-                DateOnly birthDate, bool isVaccinated, PetStatus status) : base(id)
+    private Pet(PetId id) : base(id)
+    {
+    }
+
+    private Pet(PetId id, string name, PetBreed breed, string description, string color, float height,
+        float weight, string healthInformation, Address address, string phone, bool isCastrated,
+        DateOnly birthDate, bool isVaccinated, PetStatus status) : base(id)
     {
         Name = name;
         Breed = breed;
@@ -43,11 +48,17 @@ public class Pet : Entity<PetId>
         IsVaccinated = isVaccinated;
         Status = status;
     }
+
     public void AddRequisiteDetails(RequisiteDetails requisitesDetails)
     {
         RequisitesDetails = requisitesDetails;
     }
-    
+
+    public void SetSerialNumber(SerialNumber serialNumber)
+    {
+        SerialNumber = serialNumber;
+    }
+
     public void SoftDelete()
     {
         _isDeleted = true;
@@ -58,15 +69,16 @@ public class Pet : Entity<PetId>
         if (_isDeleted)
             _isDeleted = false;
     }
-    public static Result<Pet, Error> Create(PetId id, string name, PetBreed breed, string description, string color, float height, 
-        float weight, string healthInformation, Address address, string phone, bool isCastrated,
+
+    public static Result<Pet, Error> Create(PetId id, string name, PetBreed breed, string description, string color,
+        float height, float weight, string healthInformation, Address address, string phone, bool isCastrated,
         DateOnly birthDate, bool isVaccinated, PetStatus status)
     {
         if (string.IsNullOrWhiteSpace(name)) return Errors.General.ValueIsInvalid("name");
         if (weight <= 0) return Errors.General.ValueIsInvalid("weight");
         if (height <= 0) return Errors.General.ValueIsInvalid("height");
-        
-        return new Pet(id, name, breed, description, color, height, weight, healthInformation, 
-                                    address, phone, isCastrated, birthDate, isVaccinated, status);
+
+        return new Pet(id, name, breed, description, color, height, weight, healthInformation,
+            address, phone, isCastrated, birthDate, isVaccinated, status);
     }
 }
