@@ -85,6 +85,7 @@ namespace PetFamily.Infrastructure.Migrations
                     address_street = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     breed_id = table.Column<Guid>(type: "uuid", nullable: false),
                     species_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    serial_number = table.Column<int>(type: "integer", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
                     requisites_details = table.Column<string>(type: "jsonb", nullable: true)
                 },
