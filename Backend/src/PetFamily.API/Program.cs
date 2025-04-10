@@ -31,7 +31,7 @@ try
     builder.Services.AddSerilog();
 
     builder.Services.AddApplication();
-    builder.Services.AddInfrastructure();
+    builder.Services.AddInfrastructure(builder.Configuration);
 
     builder.Services.AddFluentValidationAutoValidation(configuration =>
     {
