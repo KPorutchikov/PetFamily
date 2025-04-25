@@ -14,9 +14,4 @@ public class AddFileHandler
     {
         _fileProvider = fileProvider;
     }
-    
-    public async Task<Result<string, Error>> Handle(FileData fileData, CancellationToken ct = default)
-    {
-        return await _fileProvider.UploadFile(fileData, ct);
-    }
 }

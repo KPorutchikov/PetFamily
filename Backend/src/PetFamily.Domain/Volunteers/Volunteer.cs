@@ -92,7 +92,7 @@ public class Volunteer : Entity<VolunteerId>
         ExperienceInYears = experienceInYears;
     }
 
-    public void Delete()
+    public void SoftDelete()
     {
         if (_isDeleted == false)
         {

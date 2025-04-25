@@ -130,5 +130,19 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("is_deleted");
+        
+        builder.OwnsOne(p => p.Files, r =>
+        {
+            r.ToJson("files");
+            r.OwnsMany(x => x.Values, n =>
+            {
+                n.Property(v => v.PathToStorage)
+                    .HasConversion(
+                        p => p.Path,
+                        value => FilePath.Create(value).Value)
+                    .IsRequired()
+                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+            });
+        });
     }
 }
