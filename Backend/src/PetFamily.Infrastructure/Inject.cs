@@ -18,6 +18,7 @@ public static class Inject
     {
         services.AddScoped<ApplicationDbContext>();
         services.AddScoped<IVolunteerRepository,VolunteerRepository>();
+        services.AddScoped<ISpeciesRepository,SpeciesRepository>();
         services.AddMinio(configuration);
         
         return services;

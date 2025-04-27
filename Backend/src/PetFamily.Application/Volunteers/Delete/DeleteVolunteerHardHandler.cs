@@ -25,7 +25,7 @@ public class DeleteVolunteerHardHandler
         var volunteerResult = await _volunteerRepository.GetById(request.VolunteerId, ct);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
-
+ 
         var result = _volunteerRepository.HardDelete(volunteerResult.Value, ct);
 
         _logger.LogInformation("Volunteer was deleted (hard) with id: {Id}.", request.VolunteerId);

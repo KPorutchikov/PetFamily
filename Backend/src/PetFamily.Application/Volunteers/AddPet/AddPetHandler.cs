@@ -15,17 +15,20 @@ public class AddPetHandler
     private const string BUCKET_NAME = "files";
     private readonly IFileProvider _fileProvider;
     private readonly IVolunteerRepository _volunteerRepository;
+    private readonly ISpeciesRepository _speciesRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AddPetHandler> _logger;
 
     public AddPetHandler(
         IFileProvider fileProvider,
         IVolunteerRepository volunteerRepository,
+        ISpeciesRepository speciesRepository,
         IUnitOfWork unitOfWork,
         ILogger<AddPetHandler> logger)
     {
         _fileProvider = fileProvider;
         _volunteerRepository = volunteerRepository;
+        _speciesRepository = speciesRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
     }
@@ -39,6 +42,10 @@ public class AddPetHandler
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error;
         
+            var speciesResult= await _speciesRepository.GetByBreedId(command.BreedId, ct);
+            if (speciesResult.IsFailure)
+                return speciesResult.Error;
+
             var breed = PetBreed.Create(command.SpeciesId, command.BreedId).Value;
             var address = Address.Create(command.City, command.Street, command.HouseNumber, command.ApartmentNumber).Value;
             var status = PetStatus.Create((PetStatus.Status)command.Status).Value;
