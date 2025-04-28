@@ -30,7 +30,7 @@ public class UpdateRequisiteDetailsHandler
 
         volunteerResult.Value.AddRequisiteDetails(new RequisiteDetails() { RequisitesList = requisiteDetails });
 
-        var result = await _volunteerRepository.Save(volunteerResult.Value, ct);
+        var result = _volunteerRepository.Save(volunteerResult.Value, ct);
 
         _logger.LogInformation("Requisite details were successfully updated.");
 

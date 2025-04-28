@@ -292,6 +292,48 @@ namespace PetFamily.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");
 
+                    b.OwnsOne("PetFamily.Domain.Shared.ValueObjectList<PetFamily.Domain.Shared.PetFile>", "Files", b1 =>
+                        {
+                            b1.Property<Guid>("PetId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.HasKey("PetId");
+
+                            b1.ToTable("pets");
+
+                            b1.ToJson("files");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetId")
+                                .HasConstraintName("fk_pets_pets_id");
+
+                            b1.OwnsMany("PetFamily.Domain.Shared.PetFile", "Values", b2 =>
+                                {
+                                    b2.Property<Guid>("ValueObjectListPetId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<int>("__synthesizedOrdinal")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("PathToStorage")
+                                        .IsRequired()
+                                        .HasMaxLength(100)
+                                        .HasColumnType("character varying(100)");
+
+                                    b2.HasKey("ValueObjectListPetId", "__synthesizedOrdinal");
+
+                                    b2.ToTable("pets");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ValueObjectListPetId")
+                                        .HasConstraintName("fk_pets_pets_value_object_list_pet_id");
+                                });
+
+                            b1.Navigation("Values");
+                        });
+
                     b.OwnsOne("PetFamily.Domain.Shared.RequisiteDetails", "RequisitesDetails", b1 =>
                         {
                             b1.Property<Guid>("PetId")
@@ -341,6 +383,8 @@ namespace PetFamily.Infrastructure.Migrations
 
                             b1.Navigation("RequisitesList");
                         });
+
+                    b.Navigation("Files");
 
                     b.Navigation("RequisitesDetails");
                 });

@@ -20,34 +20,28 @@ public class VolunteerRepository : IVolunteerRepository
     {
         await _dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
         return volunteer.Id;
     }
 
-    public async Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken = default)
+    public Guid Save(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         _dbContext.Volunteers.Attach(volunteer);
-
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id;
     }
 
     public async Task<Guid> SoftDelete(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
-        volunteer.Delete();
-
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        volunteer.SoftDelete();
 
         return volunteer.Id;
     }
 
-    public async Task<Guid> HardDelete(Volunteer volunteer, CancellationToken cancellationToken = default)
+    public Guid HardDelete(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         _dbContext.Volunteers.Remove(volunteer);
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        _dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id;
     }
@@ -77,4 +71,18 @@ public class VolunteerRepository : IVolunteerRepository
 
         return volunteer;
     }
+
+    public async Task<Result<Pet, Error>> GetPetById(PetId petId, CancellationToken cancellationToken = default)
+    {
+        var pet = await _dbContext.Volunteers
+            .Include(p => p.Pets)
+            .Select(p => p.Pets.FirstOrDefault(x => x.Id == petId))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (pet == null)
+            return Errors.General.NotFound(petId);
+
+        return pet;
+    }
+        
 }

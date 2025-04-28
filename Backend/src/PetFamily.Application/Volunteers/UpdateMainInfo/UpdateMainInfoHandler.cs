@@ -33,7 +33,7 @@ public class UpdateMainInfoHandler
             Phone.Create(request.Dto.Phone).Value,
             ExperienceInYears.Create(request.Dto.ExperienceInYears).Value);
 
-        var result = await _volunteerRepository.Save(volunteerResult.Value, ct);
+        var result = _volunteerRepository.Save(volunteerResult.Value, ct);
 
         _logger.LogInformation("Volunteer was successfully updated.");
         return result;

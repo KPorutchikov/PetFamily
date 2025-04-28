@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Database;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.Delete;
@@ -24,8 +25,8 @@ public class DeleteVolunteerHardHandler
         var volunteerResult = await _volunteerRepository.GetById(request.VolunteerId, ct);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
-
-        var result = await _volunteerRepository.HardDelete(volunteerResult.Value, ct);
+ 
+        var result = _volunteerRepository.HardDelete(volunteerResult.Value, ct);
 
         _logger.LogInformation("Volunteer was deleted (hard) with id: {Id}.", request.VolunteerId);
 

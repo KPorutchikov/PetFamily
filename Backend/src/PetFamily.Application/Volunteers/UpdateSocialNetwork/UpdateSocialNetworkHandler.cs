@@ -30,7 +30,7 @@ public class UpdateSocialNetworkHandler
 
         volunteerResult.Value.AddSocialNetworkDetails(new SocialNetworkDetails() { SocialNetworks = socialNetworks });
 
-        var result = await _volunteerRepository.Save(volunteerResult.Value, ct);
+        var result = _volunteerRepository.Save(volunteerResult.Value, ct);
 
         _logger.LogInformation("SocialNetwork was successfully updated.");
 

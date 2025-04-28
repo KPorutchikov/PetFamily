@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using PetFamily.API.Middlewares;
 using PetFamily.API.Validation;
 using PetFamily.Application;
@@ -26,7 +27,10 @@ try
     
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" });
+    });
 
     builder.Services.AddSerilog();
 

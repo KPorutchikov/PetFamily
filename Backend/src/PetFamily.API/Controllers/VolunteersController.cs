@@ -1,7 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using PetFamily.API.Contracts;
 using PetFamily.API.Extensions;
+using PetFamily.API.Processors;
 using PetFamily.Application;
+using PetFamily.Application.Volunteers.AddPet;
+using PetFamily.Application.Volunteers.AddPetPhotos;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
@@ -21,6 +25,45 @@ public class VolunteersController : ApplicationController
         var result = await handler.Handle(request, cancellationToken);
 
         return result.ToResponse();
+    }
+
+    [HttpPost("{id:guid}/pet")]
+    public async Task<ActionResult> AddPet(
+        [FromRoute] Guid id,
+        [FromBody] AddPetRequest request,
+        [FromServices] AddPetHandler handler,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var command = new AddPetCommand(id, request.Name, request.SpeciesId, request.BreedId,
+            request.Description, request.Color, request.Weight, request.Height, request.HealthInformation,
+            request.City, request.Street, request.HouseNumber, request.ApartmentNumber, request.Phone,
+            request.IsCastrated, request.BirthDate, request.IsVaccinated, request.Status);
+
+        var result = await handler.Handle(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpPost("pet/{id:guid}/photos")]
+    public async Task<IActionResult> AddPetPhotos(
+        [FromRoute] Guid id,
+        IFormFileCollection files,
+        [FromServices] AddPetPhotosHandler handler,
+        CancellationToken cancellationToken)
+    {
+        await using var fileProcessor = new FromFileProcessor();
+        var fileDto = fileProcessor.Process(files);
+
+        var command = new AddPetPhotosCommand(id, fileDto);
+
+        var result = await handler.Handle(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
     }
 
     [HttpPut("{id:guid}/social-networks")]

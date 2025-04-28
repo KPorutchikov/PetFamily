@@ -15,6 +15,10 @@ public class BreedId : ComparableValueObject
     public static BreedId Empty() => new(Guid.Empty);
     
     public static BreedId Create(Guid id) => new(id);
+    
+    public static implicit operator BreedId(Guid id) => new(id);
+    
+    public static implicit operator Guid(BreedId id) => id.Value;
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
     {

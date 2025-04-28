@@ -23,7 +23,9 @@ public class Pet : Entity<PetId>
     public SerialNumber SerialNumber { get; private set; }
     public RequisiteDetails? RequisitesDetails { get; private set; }
 
-    public DateTime CreatedDate = DateTime.Now;
+    public DateTime CreatedDate = DateTime.Now.ToUniversalTime();
+    
+    public ValueObjectList<PetFile>? Files { get; private set; }
 
     // for EF Core
     private Pet(PetId id) : base(id)
@@ -49,6 +51,9 @@ public class Pet : Entity<PetId>
         Status = status;
     }
 
+    public void UpdateFilesList(ValueObjectList<PetFile> files) =>
+        Files = files;
+    
     public void AddRequisiteDetails(RequisiteDetails requisitesDetails)
     {
         RequisitesDetails = requisitesDetails;
