@@ -25,7 +25,7 @@ public class Pet : Entity<PetId>
 
     public DateTime CreatedDate = DateTime.Now.ToUniversalTime();
     
-    public ValueObjectList<PetFile> Files { get; private set; }
+    public ValueObjectList<PetFile>? Files { get; private set; }
 
     // for EF Core
     private Pet(PetId id) : base(id)
@@ -34,7 +34,7 @@ public class Pet : Entity<PetId>
 
     private Pet(PetId id, string name, PetBreed breed, string description, string color, float height,
         float weight, string healthInformation, Address address, string phone, bool isCastrated,
-        DateOnly birthDate, bool isVaccinated, PetStatus status, ValueObjectList<PetFile> files) : base(id)
+        DateOnly birthDate, bool isVaccinated, PetStatus status) : base(id)
     {
         Name = name;
         Breed = breed;
@@ -49,7 +49,6 @@ public class Pet : Entity<PetId>
         BirthDate = birthDate;
         IsVaccinated = isVaccinated;
         Status = status;
-        Files = files;
     }
 
     public void UpdateFilesList(ValueObjectList<PetFile> files) =>
@@ -78,13 +77,13 @@ public class Pet : Entity<PetId>
 
     public static Result<Pet, Error> Create(PetId id, string name, PetBreed breed, string description, string color,
         float height, float weight, string healthInformation, Address address, string phone, bool isCastrated,
-        DateOnly birthDate, bool isVaccinated, PetStatus status, ValueObjectList<PetFile> files)
+        DateOnly birthDate, bool isVaccinated, PetStatus status)
     {
         if (string.IsNullOrWhiteSpace(name)) return Errors.General.ValueIsInvalid("name");
         if (weight <= 0) return Errors.General.ValueIsInvalid("weight");
         if (height <= 0) return Errors.General.ValueIsInvalid("height");
 
         return new Pet(id, name, breed, description, color, height, weight, healthInformation,
-            address, phone, isCastrated, birthDate, isVaccinated, status, files);
+            address, phone, isCastrated, birthDate, isVaccinated, status);
     }
 }

@@ -384,8 +384,7 @@ namespace PetFamily.Infrastructure.Migrations
                             b1.Navigation("RequisitesList");
                         });
 
-                    b.Navigation("Files")
-                        .IsRequired();
+                    b.Navigation("Files");
 
                     b.Navigation("RequisitesDetails");
                 });

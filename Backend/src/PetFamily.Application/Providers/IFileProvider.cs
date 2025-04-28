@@ -8,5 +8,4 @@ public interface IFileProvider
 {
     Task<Result<IReadOnlyList<FilePath>, Error>> UploadFiles(
         IEnumerable<FileData> filesData, CancellationToken cancellationToken = default);
- 
 }

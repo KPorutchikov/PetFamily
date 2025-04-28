@@ -71,4 +71,18 @@ public class VolunteerRepository : IVolunteerRepository
 
         return volunteer;
     }
+
+    public async Task<Result<Pet, Error>> GetPetById(PetId petId, CancellationToken cancellationToken = default)
+    {
+        var pet = await _dbContext.Volunteers
+            .Include(p => p.Pets)
+            .Select(p => p.Pets.FirstOrDefault(x => x.Id == petId))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (pet == null)
+            return Errors.General.NotFound(petId);
+
+        return pet;
+    }
+        
 }

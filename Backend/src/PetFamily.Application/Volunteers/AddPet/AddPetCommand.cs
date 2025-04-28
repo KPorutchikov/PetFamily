@@ -18,7 +18,4 @@ public record AddPetCommand(
     bool IsCastrated,
     DateOnly BirthDate,
     bool IsVaccinated,
-    int Status,
-    IEnumerable<CreateFileDto> Files);
-
-public record CreateFileDto(Stream Content, string FileName);
+    int Status);

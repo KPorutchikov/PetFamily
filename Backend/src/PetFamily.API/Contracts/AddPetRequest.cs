@@ -17,5 +17,4 @@ public record AddPetRequest(
     bool IsCastrated,
     DateOnly BirthDate,
     bool IsVaccinated,
-    int Status,
-    IFormFileCollection Files);
+    int Status);

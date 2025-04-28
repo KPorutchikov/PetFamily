@@ -17,7 +17,19 @@ public class SpeciesRepository : ISpeciesRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Result<Species, Error>> GetByBreedId(BreedId breedId, CancellationToken cancellationToken)
+    public async Task<Result<Breed, Error>> GetBreedByBreedId(BreedId breedId, CancellationToken cancellationToken)
+    {
+        var breed = await _dbContext.Species
+            .Include(b => b.Breeds)
+            .Select(b => b.Breeds.FirstOrDefault(x => x.Id == breedId))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (breed == null)
+            return Errors.General.NotFound(breedId);
+
+        return breed;
+    }
+    public async Task<Result<Species, Error>> GetSpeciesByBreedId(BreedId breedId, CancellationToken cancellationToken)
     {
         var species = await _dbContext.Species
             .Include(b => b.Breeds)

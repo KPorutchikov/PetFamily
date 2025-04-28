@@ -13,7 +13,7 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250419150507_Initial")]
+    [Migration("20250428112100_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -387,8 +387,7 @@ namespace PetFamily.Infrastructure.Migrations
                             b1.Navigation("RequisitesList");
                         });
 
-                    b.Navigation("Files")
-                        .IsRequired();
+                    b.Navigation("Files");
 
                     b.Navigation("RequisitesDetails");
                 });

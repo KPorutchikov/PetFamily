@@ -8,7 +8,9 @@ namespace PetFamily.Application.Volunteers;
 
 public interface ISpeciesRepository
 {
-    Task<Result<Species, Error>> GetByBreedId(BreedId breedId, CancellationToken cancellationToken);
+    Task<Result<Breed, Error>> GetBreedByBreedId(BreedId breedId, CancellationToken cancellationToken);
+    
+    Task<Result<Species, Error>> GetSpeciesByBreedId(BreedId breedId, CancellationToken cancellationToken);
 
     Task<Result<Species, Error>> GetById(SpeciesId speciesId, CancellationToken cancellationToken);
 

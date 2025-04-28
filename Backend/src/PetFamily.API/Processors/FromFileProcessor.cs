@@ -1,4 +1,4 @@
-﻿using PetFamily.Application.Volunteers.AddPet;
+﻿using PetFamily.Application.Volunteers.AddPetPhotos;
 
 namespace PetFamily.API.Processors;
 
