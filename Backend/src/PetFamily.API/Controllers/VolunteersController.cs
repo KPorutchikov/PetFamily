@@ -30,7 +30,7 @@ public class VolunteersController : ApplicationController
     [HttpPost("{id:guid}/pet")]
     public async Task<ActionResult> AddPet(
         [FromRoute] Guid id,
-        [FromForm] AddPetRequest request,
+        [FromBody] AddPetRequest request,
         [FromServices] AddPetHandler handler,
         CancellationToken cancellationToken = default
     )
