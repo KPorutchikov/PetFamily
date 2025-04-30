@@ -28,39 +28,17 @@ public class MovePetHandler
         var volunteer = await _volunteerRepository.GetByPetId(command.PetId, ct);
         if (volunteer.IsFailure)
             return volunteer.Error;
-
-        if (command.SerialNumber <= 0 || command.SerialNumber > volunteer.Value.Pets.Count)
-            return Errors.General.ValueIsInvalid("SerialNumber");
-
+        
         var petCurrent = volunteer.Value.Pets.Where(p => p.Id == command.PetId)!.FirstOrDefault();
 
-        var incriment = petCurrent!.SerialNumber.Value > command.SerialNumber ? -1 : 1;
+        var result = volunteer.Value.MovePet(petCurrent!, SerialNumber.Create(command.SerialNumber).Value);
+        if (result.IsFailure)
+            return result.Error;
 
-        var transaction = await _unitOfWork.BeginTransaction(ct);
-        try
-        {
-            while (petCurrent.SerialNumber.Value != command.SerialNumber)
-            {
-                volunteer.Value.Pets
-                    .FirstOrDefault(p => p.SerialNumber.Value == petCurrent.SerialNumber.Value + incriment)!
-                    .SetSerialNumber(SerialNumber.Create(petCurrent.SerialNumber.Value).Value);
+        await _unitOfWork.SaveChanges(ct);
+        
+        _logger.LogInformation("Move pet {@pet} in volunteer [{@volunteer}]", petCurrent, volunteer.Value);
 
-                petCurrent.SetSerialNumber(SerialNumber.Create(petCurrent.SerialNumber.Value + incriment).Value);
-            }
-
-            await _unitOfWork.SaveChanges(ct);
-
-            transaction.Commit();
-
-            return command.PetId;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Can not move pet in volunteer - {id} in transaction", command.PetId);
-
-            transaction.Rollback();
-
-            return Error.Failure("Can not move pet in volunteer", "volunteer.pet.failure");
-        }
+        return command.PetId;
     }
 }

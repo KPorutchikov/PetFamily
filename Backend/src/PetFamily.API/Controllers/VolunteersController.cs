@@ -81,7 +81,7 @@ public class VolunteersController : ApplicationController
          if (result.IsFailure)
              return result.Error.ToResponse();
     
-        return Ok();
+        return Ok(result.Value);
     }
 
     [HttpPut("{id:guid}/social-networks")]
