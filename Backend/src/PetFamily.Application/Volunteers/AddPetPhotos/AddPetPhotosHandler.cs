@@ -10,7 +10,7 @@ namespace PetFamily.Application.Volunteers.AddPetPhotos;
 
 public class AddPetPhotosHandler
 {
-   private const string BUCKET_NAME = "files";
+    private const string BUCKET_NAME = "files";
     private readonly IFileProvider _fileProvider;
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -27,7 +27,7 @@ public class AddPetPhotosHandler
         _unitOfWork = unitOfWork;
         _logger = logger;
     }
-    
+
     public async Task<Result<Guid, Error>> Handle(AddPetPhotosCommand command, CancellationToken ct = default)
     {
         var transaction = await _unitOfWork.BeginTransaction(ct);
@@ -47,7 +47,7 @@ public class AddPetPhotosHandler
                     return filePath.Error;
 
                 var fileContent = new FileData(file.Content, filePath.Value, BUCKET_NAME);
-                
+
                 filesData.Add(fileContent);
             }
 
@@ -55,23 +55,23 @@ public class AddPetPhotosHandler
                 .Select(f => f.FilePath)
                 .Select(f => PetFile.Create(f).Value)
                 .ToList();
-            
+
             petResult.Value.UpdateFilesList(petFiles);
 
             await _unitOfWork.SaveChanges(ct);
-            
+
             var uploadResult = await _fileProvider.UploadFiles(filesData, ct);
-            
+
             if (uploadResult.IsFailure)
                 return uploadResult.Error;
-            
+
             transaction.Commit();
-            
+
             return petResult.Value.Id.Value;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Can not add files to pet - {id} in transaction", command.PetId);
+            _logger.LogError(ex, "Can not add files to pet - {id} in transaction", command.PetId);
 
             transaction.Rollback();
 

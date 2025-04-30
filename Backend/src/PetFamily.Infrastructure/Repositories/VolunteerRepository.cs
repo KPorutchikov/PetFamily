@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
@@ -75,6 +76,7 @@ public class VolunteerRepository : IVolunteerRepository
     public async Task<Result<Pet, Error>> GetPetById(PetId petId, CancellationToken cancellationToken = default)
     {
         var pet = await _dbContext.Volunteers
+            .Where(x => x.Pets.Any(p => p.Id == petId))
             .Include(p => p.Pets)
             .Select(p => p.Pets.FirstOrDefault(x => x.Id == petId))
             .FirstOrDefaultAsync(cancellationToken);
@@ -84,5 +86,17 @@ public class VolunteerRepository : IVolunteerRepository
 
         return pet;
     }
-        
+
+    public async Task<Result<Volunteer, Error>> GetByPetId(PetId petId, CancellationToken cancellationToken = default)
+    {
+        var volunteer = await _dbContext.Volunteers
+            .Where(x => x.Pets.Any(y => y.Id == petId))
+            .Include(p => p.Pets)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (volunteer == null)
+            return Errors.General.NotFound(petId);
+
+        return volunteer;
+    }
 }

@@ -8,6 +8,7 @@ using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.AddPetPhotos;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Application.Volunteers.Delete;
+using PetFamily.Application.Volunteers.EditPet;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateRequisiteDetails;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork;
@@ -63,6 +64,23 @@ public class VolunteersController : ApplicationController
         if (result.IsFailure)
             return result.Error.ToResponse();
 
+        return Ok(result.Value);
+    }
+    
+    [HttpPost("pet/{id:guid}/serial_number")]
+    public async Task<ActionResult> MovePet(
+        [FromRoute] Guid id,
+        [FromBody] MovePetRequest request,
+        [FromServices] MovePetHandler handler,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var command = new MovePetCommand(id, request.SerialNumber);
+    
+         var result = await handler.Handle(command, cancellationToken);
+         if (result.IsFailure)
+             return result.Error.ToResponse();
+    
         return Ok(result.Value);
     }
 
