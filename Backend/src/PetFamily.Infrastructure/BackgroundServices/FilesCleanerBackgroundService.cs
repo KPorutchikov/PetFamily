@@ -28,13 +28,13 @@ public class FilesCleanerBackgroundService : BackgroundService
     {
         _logger.LogInformation("FilesCleanerBackgroundService is starting.");
 
-        await using var scope = _scopeFactory.CreateAsyncScope();
-
-        var fileProvider = scope.ServiceProvider.GetRequiredService<IFileProvider>();
-
         while (!stoppingToken.IsCancellationRequested)
         {
             var fileInfos = await _messageQueue.ReadAsync(stoppingToken);
+            
+            await using var scope = _scopeFactory.CreateAsyncScope();
+
+            var fileProvider = scope.ServiceProvider.GetRequiredService<IFileProvider>();
 
             foreach (var fileInfo in fileInfos)
             {
