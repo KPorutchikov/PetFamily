@@ -8,20 +8,51 @@ namespace PetFamily.API.Extensions;
 
 public static class ResponseExtensions
 {
-    public static ActionResult ToResponse(this Error error)
+    // public static ActionResult ToResponse(this Error error)
+    // {
+    //     return new ObjectResult(error)
+    //     {
+    //         StatusCode = StatusCodes.Status500InternalServerError
+    //     };
+    // }
+
+    public static ActionResult ToResponse (this Error error)
     {
-        return new ObjectResult(error)
+        var statusCode = GetStatusCodeForErrorType(error.Type);
+
+        var envelope = Envelope.Error(error.ToErrorList());
+
+        return new ObjectResult(envelope)
         {
-            StatusCode = StatusCodes.Status500InternalServerError
+            StatusCode = statusCode
         };
     }
-
-    public static ActionResult<T> ToResponse<T>(this Result<T, Error> result)
+    
+    public static ActionResult ToResponse (this ErrorList errors)
     {
-        if (result.IsSuccess)
-            return new OkObjectResult(Envelope.Ok(result.Value));
+        if (!errors.Any())
+        {
+            return new ObjectResult(null)
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+        }
+            
+        var distinctErrorTypes = errors.Select(x => x.Type).Distinct().ToList();
+        var statusCode = distinctErrorTypes.Count > 1 
+            ? StatusCodes.Status500InternalServerError 
+            : GetStatusCodeForErrorType(distinctErrorTypes.First());
 
-        var statusCode = result.Error.Type switch
+        var envelope = Envelope.Error(errors);
+
+        return new ObjectResult(envelope)
+        {
+            StatusCode = statusCode
+        };
+    }
+    
+    private static int GetStatusCodeForErrorType(ErrorType errorType) =>
+        errorType switch
         {
             ErrorType.Validation => StatusCodes.Status400BadRequest,
             ErrorType.NotFound => StatusCodes.Status404NotFound,
@@ -30,32 +61,22 @@ public static class ResponseExtensions
             _ => StatusCodes.Status500InternalServerError
         };
 
-        var responseError = new ResponseError(result.Error.Code, result.Error.Message, null);
-
-        var envelope = Envelope.Error([responseError]);
-
-        return new ObjectResult(envelope)
-        {
-            StatusCode = statusCode
-        };
-    }
-
-    public static ActionResult ToValidationErrorResponse(this ValidationResult result)
-    {
-        if (result.IsValid)
-            throw new InvalidOperationException("Result can not be succeed.");
-
-        var validationErrors = result.Errors;
-        var responseErrors = from validationError in validationErrors
-            let errorMessage = validationError.ErrorMessage
-            let error = Error.Deserialize(errorMessage)
-            select new ResponseError(error.Code, error.Message, validationError.PropertyName);
-        
-        var envelope = Envelope.Error(responseErrors);
-
-        return new ObjectResult(envelope)
-        {
-            StatusCode = StatusCodes.Status400BadRequest
-        };
-    }
+    // public static ActionResult ToValidationErrorResponse(this ValidationResult result)
+    // {
+    //     if (result.IsValid)
+    //         throw new InvalidOperationException("Result can not be succeed.");
+    //
+    //     var validationErrors = result.Errors;
+    //     var responseErrors = from validationError in validationErrors
+    //         let errorMessage = validationError.ErrorMessage
+    //         let error = Error.Deserialize(errorMessage)
+    //         select new ResponseError(error.Code, error.Message, validationError.PropertyName);
+    //     
+    //     var envelope = Envelope.Error(responseErrors);
+    //
+    //     return new ObjectResult(envelope)
+    //     {
+    //         StatusCode = StatusCodes.Status400BadRequest
+    //     };
+    // }
 }

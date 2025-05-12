@@ -19,16 +19,16 @@ public class DeleteVolunteerHardHandler
     }
 
     public async Task<Result<Guid, Error>> Handle(
-        DeleteVolunteerRequest request,
+        DeleteVolunteerCommand command,
         CancellationToken ct = default)
     {
-        var volunteerResult = await _volunteerRepository.GetById(request.VolunteerId, ct);
+        var volunteerResult = await _volunteerRepository.GetById(command.VolunteerId, ct);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
  
         var result = _volunteerRepository.HardDelete(volunteerResult.Value, ct);
 
-        _logger.LogInformation("Volunteer was deleted (hard) with id: {Id}.", request.VolunteerId);
+        _logger.LogInformation("Volunteer was deleted (hard) with id: {Id}.", command.VolunteerId);
 
         return result;
     }

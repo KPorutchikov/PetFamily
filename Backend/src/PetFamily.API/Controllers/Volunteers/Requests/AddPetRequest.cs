@@ -1,4 +1,4 @@
-﻿namespace PetFamily.API.Contracts;
+﻿namespace PetFamily.API.Controllers.Volunteers.Requests;
 
 public record AddPetRequest(
     string Name,

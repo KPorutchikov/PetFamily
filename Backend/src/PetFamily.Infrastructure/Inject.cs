@@ -2,11 +2,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetFamily.Application.Database;
+using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Volunteers;
+using PetFamily.Infrastructure.BackgroundServices;
+using PetFamily.Infrastructure.MessageQueues;
 using PetFamily.Infrastructure.Providers;
 using PetFamily.Infrastructure.Repositories;
 using MinioOptions = PetFamily.Infrastructure.Options.MinioOptions;
+using FileInfo = PetFamily.Application.FileProvider.FileInfo;
 
 namespace PetFamily.Infrastructure;
 
@@ -17,17 +21,19 @@ public static class Inject
         IConfiguration configuration)
     {
         services.AddScoped<ApplicationDbContext>();
-        services.AddScoped<IVolunteerRepository,VolunteerRepository>();
-        services.AddScoped<ISpeciesRepository,SpeciesRepository>();
+        services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+        services.AddScoped<ISpeciesRepository, SpeciesRepository>();
         services.AddMinio(configuration);
-        
+
+        services.AddHostedService<FilesCleanerBackgroundService>();
+        services.AddSingleton<IMessageQueue<IEnumerable<FileInfo>>, InMemoryMessageQueue<IEnumerable<FileInfo>>>();
         return services;
     }
 
     private static IServiceCollection AddMinio(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<MinioOptions>(configuration.GetSection("Minio"));
-        
+
         services.AddMinio(options =>
         {
             var minioOptions = configuration.GetSection("Minio").Get<MinioOptions>()

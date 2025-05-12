@@ -1,13 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
-using PetFamily.Application.Volunteers;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 using PetFamily.Domain.Volunteers.ValueObjects;
 
-namespace PetFamily.Application;
+namespace PetFamily.Application.Volunteers.Create;
 
 public class CreateVolunteerHandler
 {
@@ -22,15 +21,15 @@ public class CreateVolunteerHandler
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<Guid, Error>> Handle(CreateVolunteerRequest request, CancellationToken ct = default)
+    public async Task<Result<Guid, Error>> Handle(CreateVolunteerCommand command, CancellationToken ct = default)
     {
-        var fullName = FullName.Create(request.FullName).Value;
-        var email = Email.Create(request.Email).Value;
-        var description = Description.Create(request.Description).Value;
-        var phone = Phone.Create(request.Phone).Value;
-        var experienceInYears = ExperienceInYears.Create(request.ExperienceInYears).Value;
+        var fullName = FullName.Create(command.FullName).Value;
+        var email = Email.Create(command.Email).Value;
+        var description = Description.Create(command.Description).Value;
+        var phone = Phone.Create(command.Phone).Value;
+        var experienceInYears = ExperienceInYears.Create(command.ExperienceInYears).Value;
 
-        var volunteer = await _volunteerRepository.GetByFullName(request.FullName, ct);
+        var volunteer = await _volunteerRepository.GetByFullName(command.FullName, ct);
 
         if (volunteer.IsSuccess)
         {

@@ -23,7 +23,7 @@ public class VolunteerTests
         var petStatus = PetStatus.Create(PetStatus.Status.HomeSeeking).Value;
         var petId = PetId.NewId();
         var pet = Pet.Create(petId, "Ушастик", petBreed, "Чих-пых", "коричневый", 15, 6, "здоровый", address,
-            "8-095-412-16-99", true, DateOnly.Parse("2020-06-01"), true, petStatus, null).Value;
+            "8-095-412-16-99", true, DateOnly.Parse("2020-06-01"), true, petStatus).Value;
 
         // arrange
         var result = volunteer.AddPet(pet);
@@ -50,7 +50,7 @@ public class VolunteerTests
 
         var pets = Enumerable.Range(1, 10).Select(n =>
             Pet.Create(PetId.NewId(), "Ушастик - " + n.ToString(), petBreed, "Милый чих-пых", "коричневый", 15, 6,
-                "здоровый", address, "8-095-412-16-99", true, DateOnly.Parse("2020-06-01"), true, petStatus, null).Value);
+                "здоровый", address, "8-095-412-16-99", true, DateOnly.Parse("2020-06-01"), true, petStatus).Value);
 
         foreach (Pet pet in pets)
             volunteer.AddPet(pet);
