@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Contracts;
+using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.Application;
 using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.AddPetPhotos;
-using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.EditPet;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
@@ -23,9 +24,9 @@ public class VolunteersController : ApplicationController
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
-        var result = await handler.Handle(request, cancellationToken);
+        var result = await handler.Handle(request.ToCommand(), cancellationToken);
 
-        return result.ToResponse();
+        return result.Value;
     }
 
     [HttpPost("{id:guid}/pet")]
@@ -66,7 +67,7 @@ public class VolunteersController : ApplicationController
 
         return Ok(result.Value);
     }
-    
+
     [HttpPost("pet/{id:guid}/serial_number")]
     public async Task<ActionResult> MovePet(
         [FromRoute] Guid id,
@@ -76,11 +77,11 @@ public class VolunteersController : ApplicationController
     )
     {
         var command = new MovePetCommand(id, request.SerialNumber);
-    
-         var result = await handler.Handle(command, cancellationToken);
-         if (result.IsFailure)
-             return result.Error.ToResponse();
-    
+
+        var result = await handler.Handle(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
         return Ok(result.Value);
     }
 
@@ -124,18 +125,13 @@ public class VolunteersController : ApplicationController
     public async Task<ActionResult> UpdateMainInfo(
         [FromRoute] Guid id,
         [FromServices] UpdateMainInfoHandler handler,
-        [FromBody] UpdateMainInfoDto dto,
-        [FromServices] IValidator<UpdateMainInfoRequest> validator,
+        [FromBody] UpdateMainInfoRequest request,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateMainInfoRequest(id, dto);
+        var command = new UpdateMainInfoCommand(id, request.FullName, request.Description, request.Email, 
+            request.Phone, request.ExperienceInYears);
 
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid == false)
-            return validationResult.ToValidationErrorResponse();
-
-        var result = await handler.Handle(request, cancellationToken);
-
+        var result = await handler.Handle(command, cancellationToken);
         if (result.IsFailure)
             return result.Error.ToResponse();
 
@@ -149,7 +145,7 @@ public class VolunteersController : ApplicationController
         CancellationToken cancellationToken = default
     )
     {
-        var request = new DeleteVolunteerRequest(id);
+        var request = new DeleteVolunteerCommand(id);
 
         var result = await handler.Handle(request, cancellationToken);
         if (result.IsFailure)
@@ -165,7 +161,7 @@ public class VolunteersController : ApplicationController
         CancellationToken cancellationToken = default
     )
     {
-        var request = new DeleteVolunteerRequest(id);
+        var request = new DeleteVolunteerCommand(id);
 
         var result = await handler.Handle(request, cancellationToken);
         if (result.IsFailure)

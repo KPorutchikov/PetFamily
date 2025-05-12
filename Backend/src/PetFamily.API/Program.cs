@@ -1,6 +1,5 @@
 using Microsoft.OpenApi.Models;
 using PetFamily.API.Middlewares;
-using PetFamily.API.Validation;
 using PetFamily.Application;
 using PetFamily.Infrastructure;
 using Serilog;
@@ -36,11 +35,6 @@ try
 
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
-
-    builder.Services.AddFluentValidationAutoValidation(configuration =>
-    {
-        configuration.OverrideDefaultResultFactoryWith<CustomResultFactory>();
-    });
 
     var app = builder.Build();
 

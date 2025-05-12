@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
 using PetFamily.Application.Validation;
+using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Domain.Volunteers.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer;
+namespace PetFamily.Application.Volunteers.Create;
 
-public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerRequest>
+public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerCommand>
 {
-    public CreateVolunteerRequestValidator()
+    public CreateVolunteerCommandValidator()
     {
         RuleFor(v => v.FullName).MustBeValueObject(FullName.Create);
         RuleFor(v => v.Email).MustBeValueObject(Email.Create);
