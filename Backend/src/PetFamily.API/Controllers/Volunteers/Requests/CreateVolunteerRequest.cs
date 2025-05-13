@@ -10,5 +10,5 @@ public record CreateVolunteerRequest(
     string ExperienceInYears)
 {
     public CreateVolunteerCommand ToCommand() =>
-            new CreateVolunteerCommand(FullName, Email, Description, Phone, ExperienceInYears);
+        new CreateVolunteerCommand(FullName, Email, Description, Phone, ExperienceInYears);
 }

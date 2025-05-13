@@ -4,7 +4,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialNetwork;
 
-public class UpdateSocialNetworkHandlerRequestValidator : AbstractValidator<UpdateSocialNetworkRequest>
+public class UpdateSocialNetworkHandlerRequestValidator : AbstractValidator<UpdateSocialNetworkCommand>
 {
     public UpdateSocialNetworkHandlerRequestValidator()
     {
@@ -12,7 +12,7 @@ public class UpdateSocialNetworkHandlerRequestValidator : AbstractValidator<Upda
     }
 }
 
-public class UpdateSocialNetworkDtoRequestValidator : AbstractValidator<UpdateSocialNetworkDto>
+public class UpdateSocialNetworkDtoRequestValidator : AbstractValidator<UpdateSocialNetworkCommandDto>
 {
     public UpdateSocialNetworkDtoRequestValidator()
     {

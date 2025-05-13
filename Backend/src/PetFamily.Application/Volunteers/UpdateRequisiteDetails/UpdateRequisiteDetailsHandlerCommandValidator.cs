@@ -4,17 +4,17 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.UpdateRequisiteDetails;
 
-public class UpdateRequisiteDetailsHandlerRequestValidator : AbstractValidator<UpdateRequisiteDetailsRequest>
+public class UpdateRequisiteDetailsHandlerCommandValidator : AbstractValidator<UpdateRequisiteDetailsCommand>
 {
-    public UpdateRequisiteDetailsHandlerRequestValidator()
+    public UpdateRequisiteDetailsHandlerCommandValidator()
     {
         RuleFor(r => r.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
     }
 }
 
-public class UpdateRequisiteDetailsDtoRequestValidator : AbstractValidator<UpdateRequisiteDetailsDto>
+public class UpdateRequisiteDetailsDtoCommandValidator : AbstractValidator<UpdateRequisiteDetailsCommandDto>
 {
-    public UpdateRequisiteDetailsDtoRequestValidator()
+    public UpdateRequisiteDetailsDtoCommandValidator()
     {
         RuleFor(r => r.Name).NotEmpty().WithError(Errors.General.ValueIsRequired("Requisite name is required"));
         RuleFor(r => r.Description).NotEmpty().WithError(Errors.General.ValueIsRequired("Requisite description is required"));
