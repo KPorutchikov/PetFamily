@@ -9,6 +9,7 @@ public class UpdateSocialNetworkHandlerRequestValidator : AbstractValidator<Upda
     public UpdateSocialNetworkHandlerRequestValidator()
     {
         RuleFor(r => r.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
+        RuleForEach(u => u.Dto).SetValidator(new UpdateSocialNetworkDtoRequestValidator());
     }
 }
 

@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers.ValueObjects;
 
@@ -17,7 +18,8 @@ public class UpdateMainInfoHandler
     public UpdateMainInfoHandler(
         IVolunteerRepository volunteerRepository,
         IValidator<UpdateMainInfoCommand> validator,
-        ILogger<UpdateMainInfoHandler> logger, IUnitOfWork unitOfWork)
+        ILogger<UpdateMainInfoHandler> logger, 
+        IUnitOfWork unitOfWork)
     {
         _volunteerRepository = volunteerRepository;
         _validator = validator;
@@ -32,8 +34,7 @@ public class UpdateMainInfoHandler
         var validationResult= await _validator.ValidateAsync(command, ct);
         if (validationResult.IsValid == false)
         {
-            var validationErrors = validationResult.Errors.Select(error => error.ErrorMessage);
-            
+            return validationResult.ToErrorList();
         }
             
         var volunteerResult = await _volunteerRepository.GetById(command.VolunteerId, ct);

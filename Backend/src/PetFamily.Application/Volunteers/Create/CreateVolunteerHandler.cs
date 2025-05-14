@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
@@ -13,16 +15,28 @@ public class CreateVolunteerHandler
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly ILogger<CreateVolunteerHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IValidator<CreateVolunteerCommand> _validator;
 
-    public CreateVolunteerHandler(IVolunteerRepository volunteerRepository, ILogger<CreateVolunteerHandler> logger, IUnitOfWork unitOfWork)
+    public CreateVolunteerHandler(
+        IVolunteerRepository volunteerRepository, 
+        ILogger<CreateVolunteerHandler> logger, 
+        IUnitOfWork unitOfWork, 
+        IValidator<CreateVolunteerCommand> validator)
     {
         _volunteerRepository = volunteerRepository;
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _validator = validator;
     }
 
-    public async Task<Result<Guid, Error>> Handle(CreateVolunteerCommand command, CancellationToken ct = default)
+    public async Task<Result<Guid, ErrorList>> Handle(CreateVolunteerCommand command, CancellationToken ct = default)
     {
+        var validationResult= await _validator.ValidateAsync(command, ct);
+        if (validationResult.IsValid == false)
+        {
+            return validationResult.ToErrorList();
+        }
+        
         var fullName = FullName.Create(command.FullName).Value;
         var email = Email.Create(command.Email).Value;
         var description = Description.Create(command.Description).Value;
@@ -34,7 +48,7 @@ public class CreateVolunteerHandler
         if (volunteer.IsSuccess)
         {
             _logger.LogError("Failed to create. Volunteer is exists: {fullName}", fullName.Value);
-            return Errors.Volunteer.AlreadyExist();
+            return Errors.Volunteer.AlreadyExist().ToErrorList();
         }
 
         var volunteerId = VolunteerId.NewId();
@@ -50,7 +64,7 @@ public class CreateVolunteerHandler
         if (volunteerResult.IsFailure)
         {
             _logger.LogError("Failed to create volunteer: {@error}", volunteerResult.Error);
-            return volunteerResult.Error;
+            return volunteerResult.Error.ToErrorList();
         }
 
         _volunteerRepository.Add(volunteerResult.Value, ct);
