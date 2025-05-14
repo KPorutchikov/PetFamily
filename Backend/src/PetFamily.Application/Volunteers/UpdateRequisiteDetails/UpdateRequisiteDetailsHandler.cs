@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Domain.Shared;
 
@@ -9,26 +11,35 @@ namespace PetFamily.Application.Volunteers.UpdateRequisiteDetails;
 public class UpdateRequisiteDetailsHandler
 {
     private readonly IVolunteerRepository _volunteerRepository;
-    private readonly ILogger<UpdateMainInfoHandler> _logger;
+    private readonly ILogger<UpdateRequisiteDetailsHandler> _logger;
+    private readonly IValidator<UpdateRequisiteDetailsCommand> _validator;
     private readonly IUnitOfWork _unitOfWork;
 
     public UpdateRequisiteDetailsHandler(
         IVolunteerRepository volunteerRepository,
-        ILogger<UpdateMainInfoHandler> logger, 
-        IUnitOfWork unitOfWork)
+        ILogger<UpdateRequisiteDetailsHandler> logger, 
+        IUnitOfWork unitOfWork, 
+        IValidator<UpdateRequisiteDetailsCommand> validator)
     {
         _volunteerRepository = volunteerRepository;
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _validator = validator;
     }
 
-    public async Task<Result<Guid, Error>> Handle(
+    public async Task<Result<Guid, ErrorList>> Handle(
         UpdateRequisiteDetailsCommand command,
         CancellationToken ct = default)
     {
+        var validationResult= await _validator.ValidateAsync(command, ct);
+        if (validationResult.IsValid == false)
+        {
+            return validationResult.ToErrorList();
+        }
+        
         var volunteerResult = await _volunteerRepository.GetById(command.VolunteerId, ct);
         if (volunteerResult.IsFailure)
-            return volunteerResult.Error;
+            return volunteerResult.Error.ToErrorList();
 
         var requisiteDetails = command.Dto.Select(s => Requisites.Create(s.Name, s.Description).Value).ToList();
 

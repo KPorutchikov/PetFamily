@@ -9,6 +9,7 @@ public class UpdateRequisiteDetailsHandlerCommandValidator : AbstractValidator<U
     public UpdateRequisiteDetailsHandlerCommandValidator()
     {
         RuleFor(r => r.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
+        RuleForEach(u => u.Dto).SetValidator(new UpdateRequisiteDetailsDtoCommandValidator());
     }
 }
 

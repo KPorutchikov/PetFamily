@@ -8,14 +8,6 @@ namespace PetFamily.API.Extensions;
 
 public static class ResponseExtensions
 {
-    // public static ActionResult ToResponse(this Error error)
-    // {
-    //     return new ObjectResult(error)
-    //     {
-    //         StatusCode = StatusCodes.Status500InternalServerError
-    //     };
-    // }
-
     public static ActionResult ToResponse (this Error error)
     {
         var statusCode = GetStatusCodeForErrorType(error.Type);
@@ -32,13 +24,14 @@ public static class ResponseExtensions
     {
         if (!errors.Any())
         {
-            return new ObjectResult(null)
+            return new ObjectResult(Envelope.Error(errors))
             {
                 StatusCode = StatusCodes.Status500InternalServerError
             };
         }
-            
+
         var distinctErrorTypes = errors.Select(x => x.Type).Distinct().ToList();
+        
         var statusCode = distinctErrorTypes.Count > 1 
             ? StatusCodes.Status500InternalServerError 
             : GetStatusCodeForErrorType(distinctErrorTypes.First());
@@ -60,23 +53,4 @@ public static class ResponseExtensions
             ErrorType.Failure => StatusCodes.Status500InternalServerError,
             _ => StatusCodes.Status500InternalServerError
         };
-
-    // public static ActionResult ToValidationErrorResponse(this ValidationResult result)
-    // {
-    //     if (result.IsValid)
-    //         throw new InvalidOperationException("Result can not be succeed.");
-    //
-    //     var validationErrors = result.Errors;
-    //     var responseErrors = from validationError in validationErrors
-    //         let errorMessage = validationError.ErrorMessage
-    //         let error = Error.Deserialize(errorMessage)
-    //         select new ResponseError(error.Code, error.Message, validationError.PropertyName);
-    //     
-    //     var envelope = Envelope.Error(responseErrors);
-    //
-    //     return new ObjectResult(envelope)
-    //     {
-    //         StatusCode = StatusCodes.Status400BadRequest
-    //     };
-    // }
 }
