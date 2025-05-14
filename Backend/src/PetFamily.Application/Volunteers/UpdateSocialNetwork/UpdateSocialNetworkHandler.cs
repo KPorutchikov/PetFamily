@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Database;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Domain.Shared;
 
@@ -9,31 +10,33 @@ public class UpdateSocialNetworkHandler
 {
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly ILogger<UpdateMainInfoHandler> _logger;
+    private readonly IUnitOfWork _unitOfWork;
 
     public UpdateSocialNetworkHandler(
         IVolunteerRepository volunteerRepository,
-        ILogger<UpdateMainInfoHandler> logger)
+        ILogger<UpdateMainInfoHandler> logger, IUnitOfWork unitOfWork)
     {
         _volunteerRepository = volunteerRepository;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<Guid, Error>> Handle(
-        UpdateSocialNetworkRequest request,
+        UpdateSocialNetworkCommand command,
         CancellationToken ct = default)
     {
-        var volunteerResult = await _volunteerRepository.GetById(request.VolunteerId, ct);
+        var volunteerResult = await _volunteerRepository.GetById(command.VolunteerId, ct);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
 
-        var socialNetworks = request.Dto.Select(s => SocialNetwork.Create(s.Link, s.Title).Value).ToList();
+        var socialNetworks = command.Dto.Select(s => SocialNetwork.Create(s.Link, s.Title).Value).ToList();
 
         volunteerResult.Value.AddSocialNetworkDetails(new SocialNetworkDetails() { SocialNetworks = socialNetworks });
 
-        var result = _volunteerRepository.Save(volunteerResult.Value, ct);
+        await _unitOfWork.SaveChanges(ct);
 
         _logger.LogInformation("SocialNetwork was successfully updated.");
 
-        return result;
+        return command.VolunteerId;
     }
 }

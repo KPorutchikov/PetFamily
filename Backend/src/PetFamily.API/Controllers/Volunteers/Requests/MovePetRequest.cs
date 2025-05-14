@@ -1,3 +1,8 @@
-﻿namespace PetFamily.API.Controllers.Volunteers.Requests;
+﻿using PetFamily.Application.Volunteers.EditPet;
 
-public record MovePetRequest(int SerialNumber);
+namespace PetFamily.API.Controllers.Volunteers.Requests;
+
+public record MovePetRequest(int SerialNumber)
+{
+    public MovePetCommand ToCommand(Guid petId) => new MovePetCommand(petId, SerialNumber);
+}
