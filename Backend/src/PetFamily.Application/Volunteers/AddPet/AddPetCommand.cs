@@ -1,4 +1,6 @@
-﻿namespace PetFamily.Application.Volunteers.AddPet;
+﻿using PetFamily.Application.Abstractions;
+
+namespace PetFamily.Application.Volunteers.AddPet;
 
 public record AddPetCommand(
     Guid VolunteerId,
@@ -18,4 +20,4 @@ public record AddPetCommand(
     bool IsCastrated,
     DateOnly BirthDate,
     bool IsVaccinated,
-    int Status);
+    int Status) : ICommand;

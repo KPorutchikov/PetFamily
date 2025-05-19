@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
@@ -8,7 +9,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.UpdateRequisiteDetails;
 
-public class UpdateRequisiteDetailsHandler
+public class UpdateRequisiteDetailsHandler : ICommandHandler<Guid,UpdateRequisiteDetailsCommand>
 {
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly ILogger<UpdateRequisiteDetailsHandler> _logger;

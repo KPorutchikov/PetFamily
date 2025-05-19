@@ -46,6 +46,7 @@ public static class Inject
 
         services.AddScoped<IFileProvider, MinioProvider>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
         return services;
     }
 }

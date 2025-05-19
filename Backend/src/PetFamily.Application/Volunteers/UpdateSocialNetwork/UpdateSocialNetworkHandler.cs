@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
@@ -8,7 +9,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialNetwork;
 
-public class UpdateSocialNetworkHandler
+public class UpdateSocialNetworkHandler : ICommandHandler<Guid,UpdateSocialNetworkCommand>
 {
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly ILogger<UpdateMainInfoHandler> _logger;

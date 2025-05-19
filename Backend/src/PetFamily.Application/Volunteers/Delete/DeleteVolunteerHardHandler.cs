@@ -1,13 +1,14 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.Delete;
 
-public class DeleteVolunteerHardHandler
+public class DeleteVolunteerHardHandler : ICommandHandler<Guid,DeleteVolunteerCommand>
 {
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly ILogger<DeleteVolunteerHardHandler> _logger;

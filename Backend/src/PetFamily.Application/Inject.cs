@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Application.VolunteerManagement.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.AddPetPhotos;
 using PetFamily.Application.Volunteers.Create;
@@ -24,6 +25,7 @@ public static class Inject
         services.AddScoped<AddPetHandler>();
         services.AddScoped<AddPetPhotosHandler>();
         services.AddScoped<MovePetHandler>();
+        services.AddScoped<GetVolunteersWithPaginationHandlerDapper>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
         return services;
