@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.FileProvider;
@@ -12,7 +13,7 @@ using FileInfo = PetFamily.Application.FileProvider.FileInfo;
 
 namespace PetFamily.Application.Volunteers.AddPetPhotos;
 
-public class AddPetPhotosHandler
+public class AddPetPhotosHandler : ICommandHandler<Guid,AddPetPhotosCommand>
 {
     private const string BUCKET_NAME = "files";
     private readonly IFileProvider _fileProvider;

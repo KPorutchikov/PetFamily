@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.AddPet;
@@ -9,7 +10,7 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Volunteers.EditPet;
 
-public class MovePetHandler
+public class MovePetHandler : ICommandHandler<Guid,MovePetCommand>
 {
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IUnitOfWork _unitOfWork;

@@ -1,3 +1,5 @@
-﻿namespace PetFamily.Application.Volunteers.EditPet;
+﻿using PetFamily.Application.Abstractions;
 
-public record MovePetCommand(Guid PetId, int SerialNumber);
+namespace PetFamily.Application.Volunteers.EditPet;
+
+public record MovePetCommand(Guid PetId, int SerialNumber) : ICommand;
