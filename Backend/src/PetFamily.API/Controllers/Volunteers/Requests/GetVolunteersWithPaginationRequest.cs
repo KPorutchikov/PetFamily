@@ -5,13 +5,13 @@ using PetFamily.Domain.Volunteers.ValueObjects;
 namespace PetFamily.API.Controllers.Volunteers.Requests;
 
 public record GetVolunteersWithPaginationRequest(
-    string? Id,
     string? FullName,
-    int Page,
-    int PageSize,
+    string? Email,
     string? SortBy,
-    string? SortDirection)
+    string? SortDirection,
+    int? Page,
+    int? PageSize)
 {
-    public GetVolunteersWithPaginationQuery ToQuery() =>
-        new GetVolunteersWithPaginationQuery(Id, FullName, SortBy, SortDirection, Page, PageSize);
+    public GetVolunteersWithPaginationQuery ToQuery(Guid? volunteerId) =>
+        new GetVolunteersWithPaginationQuery(volunteerId.ToString(), FullName, Email, SortBy, SortDirection, Page, PageSize);
 }

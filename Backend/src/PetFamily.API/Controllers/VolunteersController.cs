@@ -17,14 +17,25 @@ namespace PetFamily.API.Controllers;
 
 public class VolunteersController : ApplicationController
 {
+    [HttpGet("dapper/{id:guid}/volunteer")]
+    public async Task<ActionResult> VolunteerDapper(
+        [FromRoute] Guid id,
+        [FromServices] GetVolunteersWithPaginationHandlerDapper handler,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetVolunteersWithPaginationRequest(null, null, null, null, null, null);
+        var volunteer = await handler.Handle(query.ToQuery(id), cancellationToken);
+
+        return Ok(volunteer);
+    }
+    
     [HttpGet("dapper")]
-    public async Task<ActionResult> VolunteersDapper(
+    public async Task<ActionResult> VolunteersWithPaginationDapper(
         [FromQuery] GetVolunteersWithPaginationRequest request,
         [FromServices] GetVolunteersWithPaginationHandlerDapper handler,
         CancellationToken cancellationToken = default)
     {
-        var query = request.ToQuery();
-        var volunteers = await handler.Handle(query, cancellationToken);
+        var volunteers = await handler.Handle(request.ToQuery(null), cancellationToken);
 
         return Ok(volunteers);
     }

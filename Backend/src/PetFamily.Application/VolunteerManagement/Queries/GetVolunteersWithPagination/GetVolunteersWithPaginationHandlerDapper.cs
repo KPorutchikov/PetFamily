@@ -27,13 +27,14 @@ public class GetVolunteersWithPaginationHandlerDapper
         CancellationToken cancellationToken)
     {
         string sqlPart;
+        long? totalCount = null;
         var connection = _connectionFactory.Create();
 
         var parameters = new DynamicParameters();
         parameters.Add("@PageNumber", query.PageSize);
         parameters.Add("@PageSize", (query.Page - 1) * query.PageSize);
 
-        var sql_count = new StringBuilder("SELECT COUNT(*) FROM volunteers WHERE 1 = 1");
+        var sqlCount = new StringBuilder("SELECT COUNT(*) FROM volunteers WHERE 1 = 1");
 
         var sql = new StringBuilder(
             """
@@ -45,24 +46,37 @@ public class GetVolunteersWithPaginationHandlerDapper
         if (!string.IsNullOrWhiteSpace(query.id))
         {
             sqlPart = " AND id = uuid(@id)";
-            sql_count.Append(sqlPart);
+            sqlCount.Append(sqlPart);
             sql.Append(sqlPart);
             parameters.Add("@id", query.id);
         }
-
-        if (!string.IsNullOrWhiteSpace(query.FullName))
+        else
         {
-            sqlPart = " AND full_name like @FullName";
-            sql_count.Append(sqlPart);
-            sql.Append(sqlPart);
-            parameters.Add("@FullName", $"%{query.FullName}%");
+            if (!string.IsNullOrWhiteSpace(query.FullName))
+            {
+                sqlPart = " AND full_name like @FullName";
+                sqlCount.Append(sqlPart);
+                sql.Append(sqlPart);
+                parameters.Add("@FullName", $"%{query.FullName}%");
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.Email))
+            {
+                sqlPart = " AND email like @Email";
+                sqlCount.Append(sqlPart);
+                sql.Append(sqlPart);
+                parameters.Add("@Email", $"%{query.Email}%");
+            }
+
+            _logger.LogInformation($"SQL_COUNT: {sqlCount}");
+            totalCount = await connection.ExecuteScalarAsync<long>(sqlCount.ToString(), parameters);
+
+            if (!string.IsNullOrWhiteSpace(query.SortBy) && !string.IsNullOrWhiteSpace(query.SortDirection))
+                sql.ApplySorting(parameters, query.SortBy, query.SortDirection);
+
+            if (query.Page > 0 && query.PageSize > 0)
+                sql.ApplyPagination(parameters, query.Page, query.PageSize);
         }
-
-        _logger.LogInformation($"SQL_COUNT: {sql_count}");
-        long totalCount = await connection.ExecuteScalarAsync<long>(sql_count.ToString(), parameters);
-
-        sql.ApplySorting(parameters, query.SortBy, query.SortDirection);
-        sql.ApplyPagination(parameters, query.Page, query.PageSize);
 
         _logger.LogInformation($"SQL: {sql}");
         var volunteers = await connection.QueryAsync<VolunteerDto>(sql.ToString(), parameters);
@@ -70,9 +84,9 @@ public class GetVolunteersWithPaginationHandlerDapper
         return new PagedList<VolunteerDto>()
         {
             Items = volunteers.ToList(),
-            TotalCount = totalCount,
-            PageSize = query.PageSize,
-            Page = query.Page
+            TotalCount = totalCount ?? volunteers.Count(),
+            PageSize = query.PageSize ?? 1,
+            Page = query.Page ?? 1
         };
     }
 }

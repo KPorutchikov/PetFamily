@@ -8,8 +8,8 @@ public static class SqlExtensions
     public static void ApplyPagination(
         this StringBuilder sqlBuilder,
         DynamicParameters parameters,
-        int page,
-        int pageSize)
+        int? page,
+        int? pageSize)
     {
         sqlBuilder.Append(" LIMIT @PageSize OFFSET @Offset");
 
