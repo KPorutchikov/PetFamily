@@ -3,6 +3,7 @@ using PetFamily.API.Contracts;
 using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
+using PetFamily.Application.Species.DeleteBreed;
 using PetFamily.Application.VolunteerManagement.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.AddPetPhotos;
@@ -17,7 +18,7 @@ namespace PetFamily.API.Controllers;
 
 public class VolunteersController : ApplicationController
 {
-    [HttpGet("dapper/{id:guid}/volunteer")]
+    [HttpGet("{id:guid}/volunteer")]
     public async Task<ActionResult> VolunteerDapper(
         [FromRoute] Guid id,
         [FromServices] GetVolunteersWithPaginationHandlerDapper handler,
@@ -29,7 +30,7 @@ public class VolunteersController : ApplicationController
         return Ok(volunteer);
     }
     
-    [HttpGet("dapper")]
+    [HttpGet]
     public async Task<ActionResult> VolunteersWithPaginationDapper(
         [FromQuery] GetVolunteersWithPaginationRequest request,
         [FromServices] GetVolunteersWithPaginationHandlerDapper handler,

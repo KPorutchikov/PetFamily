@@ -3,6 +3,7 @@ using PetFamily.Domain.Species.ValueObjects;
 using PetFamily.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Domain.Specieses;
 
 namespace PetFamily.Infrastructure.Configurations;
 
@@ -29,6 +30,6 @@ public class SpeciesConfiguration: IEntityTypeConfiguration<Species>
         builder.HasMany(p => p.Breeds)
             .WithOne()
             .HasForeignKey("species_id")
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

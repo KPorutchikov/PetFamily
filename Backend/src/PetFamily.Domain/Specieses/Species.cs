@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species.ValueObjects;
 
-namespace PetFamily.Domain.Species;
+namespace PetFamily.Domain.Specieses;
 
 public class Species: Entity<SpeciesId>
 {
@@ -22,6 +22,11 @@ public class Species: Entity<SpeciesId>
     public void AddBreed(Breed breed)
     {
         _breeds.Add(breed);
+    }
+
+    public void UpdateBreed(List<Breed> breeds)
+    {
+        _breeds = breeds;
     }
 
     public static Result<Species, Error> Create(SpeciesId id, string name, string title)

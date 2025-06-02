@@ -13,7 +13,7 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250428112100_Initial")]
+    [Migration("20250602122800_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -283,7 +283,7 @@ namespace PetFamily.Infrastructure.Migrations
                     b.HasOne("PetFamily.Domain.Species.Species", null)
                         .WithMany("Breeds")
                         .HasForeignKey("species_id")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_breed_species_species_id");
                 });
 
