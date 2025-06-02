@@ -18,7 +18,7 @@ namespace PetFamily.API.Controllers;
 
 public class VolunteersController : ApplicationController
 {
-    [HttpGet("dapper/{id:guid}/volunteer")]
+    [HttpGet("{id:guid}/volunteer")]
     public async Task<ActionResult> VolunteerDapper(
         [FromRoute] Guid id,
         [FromServices] GetVolunteersWithPaginationHandlerDapper handler,
@@ -30,7 +30,7 @@ public class VolunteersController : ApplicationController
         return Ok(volunteer);
     }
     
-    [HttpGet("dapper")]
+    [HttpGet]
     public async Task<ActionResult> VolunteersWithPaginationDapper(
         [FromQuery] GetVolunteersWithPaginationRequest request,
         [FromServices] GetVolunteersWithPaginationHandlerDapper handler,

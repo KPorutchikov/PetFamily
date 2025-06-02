@@ -16,10 +16,10 @@ public class DeleteSpeciesHandler : ICommandHandler<Guid, DeleteSpeciesCommand>
     private readonly IUnitOfWork _unitOfWork;
 
     public DeleteSpeciesHandler(
-        ISpeciesRepository speciesRepository
-        , ILogger<DeleteSpeciesHandler> logger
-        , GetPetsWithPaginationHandlerDapper getPetsWithPaginationHandlerDapper
-        , IUnitOfWork unitOfWork)
+        ISpeciesRepository speciesRepository,
+        ILogger<DeleteSpeciesHandler> logger,
+        GetPetsWithPaginationHandlerDapper getPetsWithPaginationHandlerDapper,
+        IUnitOfWork unitOfWork)
     {
         _speciesRepository = speciesRepository;
         _logger = logger;

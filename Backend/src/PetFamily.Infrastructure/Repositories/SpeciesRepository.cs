@@ -5,6 +5,7 @@ using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Species.ValueObjects;
+using PetFamily.Domain.Specieses;
 using PetFamily.Domain.Volunteers.ValueObjects;
 
 namespace PetFamily.Infrastructure.Repositories;
@@ -73,14 +74,14 @@ public class SpeciesRepository : ISpeciesRepository
         return species.Id;
     }
 
-    public Guid DeleteSpecies(Species species)
+    public Guid DeleteSpecies(Species species, CancellationToken cancellationToken = default)
     {
         _dbContext.Species.Remove(species);
 
         return species.Id;
     }
 
-    public Guid DeleteBreed(Breed breed)
+    public Guid DeleteBreed(Breed breed, CancellationToken cancellationToken = default)
     {
         _dbContext.Breeds.Remove(breed);
         

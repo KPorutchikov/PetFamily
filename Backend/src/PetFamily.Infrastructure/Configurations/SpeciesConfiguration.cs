@@ -3,6 +3,7 @@ using PetFamily.Domain.Species.ValueObjects;
 using PetFamily.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Domain.Specieses;
 
 namespace PetFamily.Infrastructure.Configurations;
 

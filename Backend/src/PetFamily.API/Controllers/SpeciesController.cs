@@ -11,7 +11,7 @@ namespace PetFamily.API.Controllers;
 
 public class SpeciesController : ApplicationController
 {
-    [HttpGet("dapper/species")]
+    [HttpGet("species")]
     public async Task<ActionResult> SpeciesDapper(
         [FromServices] GetSpeciesHandlerDapper handler,
         CancellationToken cancellationToken = default)
@@ -21,7 +21,7 @@ public class SpeciesController : ApplicationController
         return Ok(species);
     }
 
-    [HttpPut("dapper/breed")]
+    [HttpPut("breed")]
     public async Task<ActionResult> BreedDapper(
         [FromBody] CreateBreedRequest request,
         [FromServices] GetBreedHandlerDapper handler,
