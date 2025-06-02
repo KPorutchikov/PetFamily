@@ -58,7 +58,8 @@ namespace PetFamily.Infrastructure.Migrations
                         name: "fk_breed_species_species_id",
                         column: x => x.species_id,
                         principalTable: "species",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

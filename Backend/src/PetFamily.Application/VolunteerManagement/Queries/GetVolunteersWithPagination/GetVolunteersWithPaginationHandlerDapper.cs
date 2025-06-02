@@ -6,7 +6,6 @@ using PetFamily.Application.Database;
 using PetFamily.Application.Dtos;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Models;
-using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.VolunteerManagement.Queries.GetVolunteersWithPagination;
 

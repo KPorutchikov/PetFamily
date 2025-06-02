@@ -24,6 +24,11 @@ public class Species: Entity<SpeciesId>
         _breeds.Add(breed);
     }
 
+    public void UpdateBreed(List<Breed> breeds)
+    {
+        _breeds = breeds;
+    }
+
     public static Result<Species, Error> Create(SpeciesId id, string name, string title)
     {
         if (string.IsNullOrWhiteSpace(name))

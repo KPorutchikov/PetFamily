@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
+using PetFamily.Application.SpeciesManagement.Queries.GetBreedsDapper;
+using PetFamily.Application.SpeciesManagement.Queries.GetSpeciesDapper;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 using PetFamily.Domain.Volunteers.ValueObjects;
@@ -13,20 +15,23 @@ namespace PetFamily.Application.Volunteers.AddPet;
 public class AddPetHandler : ICommandHandler<Guid,AddPetCommand>
 {
     private readonly IVolunteerRepository _volunteerRepository;
-    private readonly ISpeciesRepository _speciesRepository;
+    private readonly GetSpeciesHandlerDapper _getSpeciesHandlerDapper;
+    private readonly GetBreedHandlerDapper _getBreedHandlerDapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AddPetHandler> _logger;
     private readonly IValidator<AddPetCommand> _validator;
 
     public AddPetHandler(
         IVolunteerRepository volunteerRepository,
-        ISpeciesRepository speciesRepository,
+        GetSpeciesHandlerDapper getSpeciesHandlerDapper,
+        GetBreedHandlerDapper getBreedHandlerDapper,
         IUnitOfWork unitOfWork,
         ILogger<AddPetHandler> logger, 
         IValidator<AddPetCommand> validator)
     {
         _volunteerRepository = volunteerRepository;
-        _speciesRepository = speciesRepository;
+        _getSpeciesHandlerDapper = getSpeciesHandlerDapper;
+        _getBreedHandlerDapper = getBreedHandlerDapper;
         _unitOfWork = unitOfWork;
         _logger = logger;
         _validator = validator;
@@ -36,20 +41,22 @@ public class AddPetHandler : ICommandHandler<Guid,AddPetCommand>
     {
         var validatorResult = await _validator.ValidateAsync(command, ct);
         if (validatorResult.IsValid == false)
-        {
             return validatorResult.ToErrorList();
-        }
             
         try
         {
             var volunteerResult = await _volunteerRepository.GetById(VolunteerId.Create(command.VolunteerId), ct);
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
-        
-            var breedResult= await _speciesRepository.GetBreedByBreedId(command.BreedId, ct);
-            if (breedResult.IsFailure)
-                return breedResult.Error.ToErrorList();
 
+            var speciesExist = _getSpeciesHandlerDapper.Handle(new GetSpeciesQuery(command.SpeciesId), ct);
+            if (speciesExist.Result.TotalCount == 0)
+                return Errors.General.NotFound(command.SpeciesId).ToErrorList();
+            
+            var breedExist = _getBreedHandlerDapper.Handle(new GetBreedQuery(command.BreedId, command.SpeciesId), ct);
+            if (breedExist.Result.TotalCount == 0)
+                return Errors.General.NotFound(command.BreedId).ToErrorList();
+            
             var breed = PetBreed.Create(command.SpeciesId, command.BreedId).Value;
             var address = Address.Create(command.City, command.Street, command.HouseNumber, command.ApartmentNumber).Value;
             var status = PetStatus.Create((PetStatus.Status)command.Status).Value;

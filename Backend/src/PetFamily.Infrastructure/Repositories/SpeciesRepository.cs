@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Xml.Linq;
+using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
@@ -63,5 +64,33 @@ public class SpeciesRepository : ISpeciesRepository
             return Errors.General.NotFound();
 
         return species;
+    }
+
+    public async Task<Guid> Add(Species species, CancellationToken cancellationToken = default)
+    {
+        await _dbContext.Species.AddAsync(species, cancellationToken);
+
+        return species.Id;
+    }
+
+    public Guid DeleteSpecies(Species species)
+    {
+        _dbContext.Species.Remove(species);
+
+        return species.Id;
+    }
+
+    public Guid DeleteBreed(Breed breed)
+    {
+        _dbContext.Breeds.Remove(breed);
+        
+        return breed.Id;
+    }
+
+    public Guid Save(Species species, CancellationToken cancellationToken = default)
+    {
+        _dbContext.Species.Attach(species);
+        
+        return species.Id;
     }
 }
