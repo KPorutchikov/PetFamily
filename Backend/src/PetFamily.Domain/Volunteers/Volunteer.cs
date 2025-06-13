@@ -65,6 +65,21 @@ public class Volunteer : Entity<VolunteerId>
         return Result.Success<Error>();
     }
 
+    public UnitResult<Error> DeletePet(Guid petId)
+    {
+        foreach (var currentPet in _pets)
+        {
+            if (currentPet.Id == petId)
+            {
+                _pets.Remove(currentPet);
+                
+                return Result.Success<Error>();
+            }
+        }
+        
+        return Result.Success<Error>();
+    }
+
     public UnitResult<Error> MovePet(Pet pet, SerialNumber serialNumber)
     {
         if (_pets.Count < serialNumber.Value)

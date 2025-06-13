@@ -14,6 +14,8 @@ public interface IVolunteerRepository
     Guid HardDelete(Volunteer volunteer, CancellationToken cancellationToken = default);
     
     Task<Guid> SoftDelete(Volunteer volunteer, CancellationToken cancellationToken = default);
+    
+    Guid HardDeletePet(Pet volunteer, CancellationToken cancellationToken = default);
 
     Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken);
 

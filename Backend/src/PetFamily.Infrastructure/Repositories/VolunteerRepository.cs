@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
@@ -45,6 +44,13 @@ public class VolunteerRepository : IVolunteerRepository
         _dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id;
+    }
+    
+    public Guid HardDeletePet(Pet pet, CancellationToken cancellationToken = default)
+    {
+        _dbContext.Pets.Remove(pet);
+
+        return pet.Id;
     }
 
     public async Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId,

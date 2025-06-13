@@ -10,6 +10,7 @@ namespace PetFamily.Infrastructure;
 public class ApplicationDbContext(IConfiguration configuration) : DbContext
 {
     public DbSet<Volunteer> Volunteers => Set<Volunteer>();
+    public DbSet<Pet> Pets => Set<Pet>();
     public DbSet<Species> Species => Set<Species>();
     public DbSet<Breed> Breeds => Set<Breed>();
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -23,7 +23,7 @@ namespace PetFamily.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Breed", b =>
+            modelBuilder.Entity("PetFamily.Domain.Specieses.Breed", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -48,7 +48,7 @@ namespace PetFamily.Infrastructure.Migrations
                     b.ToTable("breed", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Species", b =>
+            modelBuilder.Entity("PetFamily.Domain.Specieses.Species", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -121,6 +121,11 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
+
+                    b.Property<string>("PetPhoto")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("main_photo");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -275,9 +280,9 @@ namespace PetFamily.Infrastructure.Migrations
                     b.ToTable("volunteers", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Breed", b =>
+            modelBuilder.Entity("PetFamily.Domain.Specieses.Breed", b =>
                 {
-                    b.HasOne("PetFamily.Domain.Species.Species", null)
+                    b.HasOne("PetFamily.Domain.Specieses.Species", null)
                         .WithMany("Breeds")
                         .HasForeignKey("species_id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -494,7 +499,7 @@ namespace PetFamily.Infrastructure.Migrations
                     b.Navigation("SocialNetworkDetails");
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Species", b =>
+            modelBuilder.Entity("PetFamily.Domain.Specieses.Species", b =>
                 {
                     b.Navigation("Breeds");
                 });

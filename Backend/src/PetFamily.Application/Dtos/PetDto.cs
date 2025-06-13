@@ -25,4 +25,11 @@ public class PetDto
     public bool IsVaccinated { get; set; }
     
     public DateOnly BirthDate { get; set; }
+
+    public PetFileDto[] Files { get; set; } = null!;
+}
+
+public class PetFileDto
+{
+    public string PathToStorage { get; set; } = string.Empty;
 }
