@@ -24,7 +24,7 @@ public class Pet : Entity<PetId>
     public RequisiteDetails? RequisitesDetails { get; private set; }
 
     public DateTime CreatedDate = DateTime.Now.ToUniversalTime();
-    
+    public string? PetPhoto  { get; private set; }
     public ValueObjectList<PetFile>? Files { get; private set; }
 
     // for EF Core
@@ -51,14 +51,39 @@ public class Pet : Entity<PetId>
         Status = status;
     }
 
+    public void UpdatePetPhoto(string pathToPhoto) => PetPhoto = pathToPhoto;
+    
     public void UpdateFilesList(ValueObjectList<PetFile> files) =>
         Files = files;
+
+    public void UpdateMain(string name, PetBreed breed, string description, string color, float weight, float height,
+        string healthInformation, Address address, string phone, bool isCastrated, DateOnly birthDate, bool isVaccinated, PetStatus status)
+    {
+        Name = name;
+        Breed = breed;
+        Description = description;
+        Color = color;
+        Weight = weight;
+        Height = height;
+        HealthInformation = healthInformation;
+        Address = address;
+        Phone = phone;
+        IsCastrated = isCastrated;  
+        BirthDate = birthDate;
+        IsVaccinated = isVaccinated;    
+        Status = status;
+    }
     
     public void AddRequisiteDetails(RequisiteDetails requisitesDetails)
     {
         RequisitesDetails = requisitesDetails;
     }
-
+    
+    public void SetStatus(PetStatus status)
+    {
+        Status = status;
+    }
+    
     public void SetSerialNumber(SerialNumber serialNumber)
     {
         SerialNumber = serialNumber;

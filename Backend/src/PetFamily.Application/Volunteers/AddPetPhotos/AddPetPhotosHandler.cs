@@ -9,13 +9,14 @@ using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Domain.Shared;
+using PetFamily.Application.Constants;
 using FileInfo = PetFamily.Application.FileProvider.FileInfo;
 
 namespace PetFamily.Application.Volunteers.AddPetPhotos;
 
 public class AddPetPhotosHandler : ICommandHandler<Guid,AddPetPhotosCommand>
 {
-    private const string BUCKET_NAME = "files";
+    //private const string BUCKET_NAME = "files";
     private readonly IFileProvider _fileProvider;
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -61,7 +62,7 @@ public class AddPetPhotosHandler : ICommandHandler<Guid,AddPetPhotosCommand>
                 if (filePath.IsFailure)
                     return filePath.Error.ToErrorList();
 
-                var fileContent = new FileData(file.Content, new FileInfo(filePath.Value, BUCKET_NAME));
+                var fileContent = new FileData(file.Content, new FileInfo(filePath.Value, AppConstants.BUCKET_NAME));
 
                 filesData.Add(fileContent);
             }

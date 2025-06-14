@@ -23,9 +23,9 @@ public class AddPetCommandValidator : AbstractValidator<AddPetCommand>
         RuleFor(u => u.HouseNumber).NotEmpty().WithError(Errors.General.ValueIsRequired());
         RuleFor(u => u.ApartmentNumber).NotEmpty().WithError(Errors.General.ValueIsRequired());
         RuleFor(u => u.Phone).NotEmpty().WithError(Errors.General.ValueIsRequired());
-        RuleFor(u => u.IsCastrated).NotEmpty().WithError(Errors.General.ValueIsRequired());
+        RuleFor(u => u.IsCastrated).Must(x => x == false || x == true).WithError(Errors.General.ValueIsRequired());
         RuleFor(u => u.BirthDate).NotEmpty().WithError(Errors.General.ValueIsRequired());
-        RuleFor(u => u.IsVaccinated).NotEmpty().WithError(Errors.General.ValueIsRequired());
+        RuleFor(u => u.IsVaccinated).Must(x => x == false || x == true).WithError(Errors.General.ValueIsRequired());
         RuleFor(u => u.Status).NotEmpty().WithError(Errors.General.ValueIsRequired());
     }
 }

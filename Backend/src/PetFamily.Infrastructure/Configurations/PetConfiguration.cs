@@ -130,6 +130,11 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("is_deleted");
+
+        builder.Property(p => p.PetPhoto)
+            .IsRequired(false)
+            .HasColumnName("main_photo")
+            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
         
         builder.OwnsOne(p => p.Files, r =>
         {
