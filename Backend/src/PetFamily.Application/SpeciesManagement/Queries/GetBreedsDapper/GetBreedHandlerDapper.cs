@@ -42,6 +42,12 @@ public class GetBreedHandlerDapper : IQueryHandler<PagedList<BreedDto>, GetBreed
             sql.Append(" AND species_id = uuid(@SpeciesId)");
             parameters.Add("SpeciesId", query.SpeciesId);
         }
+        
+        if (!string.IsNullOrWhiteSpace(query.Name))
+        {
+            sql.Append(" AND name = @Name");
+            parameters.Add("Name", query.Name);
+        }
 
         _logger.LogInformation($"SQL: {sql}");
 

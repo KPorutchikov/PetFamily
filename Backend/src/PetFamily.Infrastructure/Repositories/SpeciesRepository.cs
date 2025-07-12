@@ -1,12 +1,9 @@
-﻿using System.Xml.Linq;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Species;
 using PetFamily.Domain.Species.ValueObjects;
 using PetFamily.Domain.Specieses;
-using PetFamily.Domain.Volunteers.ValueObjects;
 
 namespace PetFamily.Infrastructure.Repositories;
 

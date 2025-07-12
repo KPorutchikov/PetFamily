@@ -3,7 +3,6 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.Delete;

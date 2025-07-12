@@ -4,7 +4,6 @@ using PetFamily.Application;
 using PetFamily.Infrastructure;
 using Serilog;
 using Serilog.Events;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 try
 {
@@ -63,3 +62,5 @@ finally
 {
     Log.CloseAndFlush();
 }
+
+public partial class Program;
