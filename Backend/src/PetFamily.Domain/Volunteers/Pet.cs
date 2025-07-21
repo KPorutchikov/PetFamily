@@ -7,6 +7,7 @@ namespace PetFamily.Domain.Volunteers;
 public class Pet : Entity<PetId>
 {
     private bool _isDeleted = false;
+    public bool IsDeleted => _isDeleted;
     public string Name { get; private set; }
     public PetBreed Breed { get; private set; }
     public string Description { get; private set; }

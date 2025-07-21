@@ -20,7 +20,7 @@ public class UpdatePetCommandValidator : AbstractValidator<UpdatePetCommand>
         RuleFor(r => r.HouseNumber).NotEmpty().WithError(Errors.General.ValueIsRequired());
         RuleFor(r => r.ApartmentNumber).NotEmpty().WithError(Errors.General.ValueIsRequired());
         RuleFor(r => r.IsCastrated).NotEmpty().WithError(Errors.General.ValueIsRequired());
-        RuleFor(r => r.IsVaccinated).NotEmpty().WithError(Errors.General.ValueIsRequired());
+        RuleFor(r => r.IsVaccinated).NotNull().WithError(Errors.General.ValueIsRequired());
         RuleFor(r => r.BirthDate).NotEmpty().WithError(Errors.General.ValueIsRequired());
         RuleFor(r => r.SpeciesId).NotEmpty().WithError(Errors.General.ValueIsRequired());
         RuleFor(r => r.BreedId).NotEmpty().WithError(Errors.General.ValueIsRequired());
