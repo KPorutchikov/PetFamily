@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
 using NSubstitute;
 using PetFamily.Application.Constants;
@@ -45,7 +46,7 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
             s.ServiceType == typeof(ApplicationDbContext));
 
         if (writeContext is not null)
-            services.Remove(writeContext);
+            services.RemoveAll<ApplicationDbContext>();
         
         services.AddScoped<ApplicationDbContext>(_ =>
             new ApplicationDbContext(_dbContainer.GetConnectionString()));
@@ -54,7 +55,7 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
             s.ServiceType == typeof(ISqlConnectionFactory));
         
         if (readContext is not null)
-            services.Remove(readContext);
+            services.RemoveAll<ISqlConnectionFactory>();
 
         services.AddSingleton<ISqlConnectionFactory>(_ => 
             new SqlConnectionFactoryTest(_dbContainer.GetConnectionString()));
@@ -63,7 +64,7 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
             s.ServiceType == typeof(IFileProvider));
         
         if (fileProvider is not null)
-            services.Remove(fileProvider);
+            services.RemoveAll<IFileProvider>();
 
         services.AddScoped<IFileProvider>(_ => _fileProviderMock);
 
@@ -82,6 +83,9 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
         
         using var scope = Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        
+        await dbContext.Database.EnsureDeletedAsync();
+        
         await dbContext.Database.EnsureCreatedAsync();
 
         _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());

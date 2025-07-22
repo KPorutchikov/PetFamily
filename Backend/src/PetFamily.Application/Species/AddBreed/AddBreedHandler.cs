@@ -14,20 +14,17 @@ namespace PetFamily.Application.Species.AddBreed;
 public class AddBreedHandler : ICommandHandler<Guid, AddBreedCommand>
 {
     private readonly ISpeciesRepository _speciesRepository;
-    private readonly GetBreedHandlerDapper _getBreedHandlerDapper;
     private readonly ILogger<AddBreedHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<AddBreedCommand> _validator;
 
     public AddBreedHandler(
         ISpeciesRepository speciesRepository,
-        GetBreedHandlerDapper getBreedHandlerDapper,
         ILogger<AddBreedHandler> logger,
         IUnitOfWork unitOfWork,
         IValidator<AddBreedCommand> validator)
     {
         _speciesRepository = speciesRepository;
-        _getBreedHandlerDapper = getBreedHandlerDapper;
         _logger = logger;
         _unitOfWork = unitOfWork;
         _validator = validator;
@@ -39,13 +36,6 @@ public class AddBreedHandler : ICommandHandler<Guid, AddBreedCommand>
         if (validationResult.IsValid == false)
             return validationResult.ToErrorList();
 
-        var breedExist = _getBreedHandlerDapper.Handle(new GetBreedQuery(null, command.SpeciesId, command.Name), ct);
-        if (breedExist.Result.TotalCount > 0)
-        {
-            _logger.LogError("Failed to create. Breed is exists: {name}", command.Name);
-            return Errors.Breed.AlreadyExist().ToErrorList();
-        }
-
         var breed = Domain.Specieses.Breed.Create(BreedId.NewId(), command.Name!).Value;
 
         var species = _speciesRepository.GetById(command.SpeciesId!, ct).Result.Value;
@@ -54,9 +44,15 @@ public class AddBreedHandler : ICommandHandler<Guid, AddBreedCommand>
             _logger.LogError("Failed to create. Species is not exists: {id}", command.SpeciesId);
             return Errors.General.NotFound(command.SpeciesId).ToErrorList();
         }
-        
+
+        if (species.Breeds.Any(b => b.Name == command.Name))
+        {
+            _logger.LogError("Failed to create. Breed is exists: {name}", command.Name);
+            return Errors.Breed.AlreadyExist().ToErrorList();
+        }
+
         species.AddBreed(breed);
-        
+
         await _unitOfWork.SaveChanges(ct);
 
         _logger.LogInformation("Created breed [{name}] with [{@id}]", command.Name, breed.Id);
