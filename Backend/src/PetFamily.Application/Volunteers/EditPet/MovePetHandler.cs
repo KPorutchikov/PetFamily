@@ -6,7 +6,6 @@ using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Volunteers.EditPet;
 

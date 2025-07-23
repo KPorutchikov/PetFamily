@@ -57,7 +57,7 @@ public class DeletePetHardHandler : ICommandHandler<Guid,DeletePetCommand>
             
             await _unitOfWork.SaveChanges(ct);
 
-            foreach (var file in pet.Value.Files?.Values.ToList()!)
+            foreach (var file in pet.Value.Files?.Values.ToList()! ?? Enumerable.Empty<PetFile>())
             {
                 await _fileProvider.RemoveFile(new FileInfo(file.PathToStorage, AppConstants.BUCKET_NAME), ct);
             }

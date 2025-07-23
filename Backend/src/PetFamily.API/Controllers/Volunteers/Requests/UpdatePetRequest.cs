@@ -1,5 +1,4 @@
 ﻿using PetFamily.Application.Volunteers.EditPet.UpdatePet;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
 
 namespace PetFamily.API.Controllers.Volunteers.Requests;
 

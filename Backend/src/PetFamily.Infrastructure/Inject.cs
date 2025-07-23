@@ -20,7 +20,7 @@ public static class Inject
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<ApplicationDbContext>();
+        services.AddScoped<ApplicationDbContext>(_ => new ApplicationDbContext(configuration.GetConnectionString("Database")!));
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
         services.AddScoped<ISpeciesRepository, SpeciesRepository>();
         services.AddMinio(configuration);

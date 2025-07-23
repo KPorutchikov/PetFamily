@@ -67,7 +67,7 @@ public class CreateVolunteerHandler : ICommandHandler<Guid,CreateVolunteerComman
             return volunteerResult.Error.ToErrorList();
         }
 
-        _volunteerRepository.Add(volunteerResult.Value, ct);
+        await _volunteerRepository.Add(volunteerResult.Value, ct);
         
         await _unitOfWork.SaveChanges(ct);
         

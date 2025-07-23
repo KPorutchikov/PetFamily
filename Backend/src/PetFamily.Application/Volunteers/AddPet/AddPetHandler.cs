@@ -53,7 +53,7 @@ public class AddPetHandler : ICommandHandler<Guid,AddPetCommand>
             if (speciesExist.Result.TotalCount == 0)
                 return Errors.General.NotFound(command.SpeciesId).ToErrorList();
             
-            var breedExist = _getBreedHandlerDapper.Handle(new GetBreedQuery(command.BreedId, command.SpeciesId), ct);
+            var breedExist = _getBreedHandlerDapper.Handle(new GetBreedQuery(command.BreedId, command.SpeciesId, null), ct);
             if (breedExist.Result.TotalCount == 0)
                 return Errors.General.NotFound(command.BreedId).ToErrorList();
             

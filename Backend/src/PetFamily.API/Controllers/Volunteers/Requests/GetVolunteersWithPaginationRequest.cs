@@ -1,6 +1,4 @@
-﻿using PetFamily.Application.Abstractions;
-using PetFamily.Application.VolunteerManagement.Queries.GetVolunteersWithPagination;
-using PetFamily.Domain.Volunteers.ValueObjects;
+﻿using PetFamily.Application.VolunteerManagement.Queries.GetVolunteersWithPagination;
 
 namespace PetFamily.API.Controllers.Volunteers.Requests;
 

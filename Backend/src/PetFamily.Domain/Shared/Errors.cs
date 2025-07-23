@@ -30,4 +30,20 @@ public static class Errors
             return Error.Validation("record.already.exist", "volunteer already exist");
         }
     }
+    
+    public static class Species
+    {
+        public static Error AlreadyExist()
+        {
+            return Error.Validation("record.already.exist", "species already exist");
+        }
+    }
+    
+    public static class Breed
+    {
+        public static Error AlreadyExist()
+        {
+            return Error.Validation("record.already.exist", "breed already exist");
+        }
+    }
 }
