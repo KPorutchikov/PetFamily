@@ -4,6 +4,8 @@ public class PetDto
 {
     public Guid Id { get; set; }
     
+    public string Volunteer { get; set; } = string.Empty;
+    
     public string Name { get; set; } = string.Empty;
     
     public string Description { get; set; } = string.Empty;
@@ -25,6 +27,10 @@ public class PetDto
     public bool IsVaccinated { get; set; }
     
     public DateOnly BirthDate { get; set; }
+    
+    public string AddressCity { get; set; } = string.Empty;
+
+    public string AddressStreet { get; set; } = string.Empty;
 
     public PetFileDto[] Files { get; set; } = null!;
 }
@@ -32,4 +38,9 @@ public class PetDto
 public class PetFileDto
 {
     public string PathToStorage { get; set; } = string.Empty;
+}
+
+public class RootValueObject
+{
+    public List<PetFileDto> Values { get; set; }
 }

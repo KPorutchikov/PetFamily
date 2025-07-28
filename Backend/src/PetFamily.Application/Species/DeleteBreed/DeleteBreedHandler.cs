@@ -31,7 +31,7 @@ public class DeleteBreedHandler : ICommandHandler<Guid, DeleteBreedCommand>
     {
         try
         {
-            var queryPets = new GetPetsWithPaginationQuery(null,null,null,null,command.BreedId,null,null,1,100);
+            var queryPets = new GetPetsWithPaginationQuery(null,null,null,null,null,command.BreedId,null,null,null,null,1,100);
             var petsExists = _getPetsWithPaginationHandlerDapper.Handle(queryPets, cancellationToken);
             if (petsExists.Result.TotalCount != 0)
                 return Errors.General.ValueIsInvalid("There's pet(s) with this type of breed. "+command.BreedId.ToString()).ToErrorList();

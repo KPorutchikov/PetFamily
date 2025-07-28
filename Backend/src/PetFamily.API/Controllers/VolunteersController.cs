@@ -3,6 +3,7 @@ using PetFamily.API.Contracts;
 using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
+using PetFamily.Application.VolunteerManagement.Queries.GetPet;
 using PetFamily.Application.VolunteerManagement.Queries.GetPetsWithPagination;
 using PetFamily.Application.VolunteerManagement.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.Volunteers.AddPet;
@@ -46,14 +47,25 @@ public class VolunteersController : ApplicationController
     }
     
     [HttpGet("/pet")]
+    public async Task<ActionResult> PetDapper(
+        [FromQuery] GetPetRequest request,
+        [FromServices] GetPetHandlerDapper handler,
+        CancellationToken cancellationToken = default)
+    {
+        var pet = await handler.Handle(request.ToQuery(), cancellationToken);
+
+        return Ok(pet);
+    }
+    
+    [HttpGet("/pets")]
     public async Task<ActionResult> PetsWithPaginationDapper(
         [FromQuery] GetPetsWithPaginationRequest request,
         [FromServices] GetPetsWithPaginationHandlerDapper handler,
         CancellationToken cancellationToken = default)
     {
-        var volunteers = await handler.Handle(request.ToQuery(), cancellationToken);
+        var pets = await handler.Handle(request.ToQuery(), cancellationToken);
 
-        return Ok(volunteers);
+        return Ok(pets);
     }
 
     [HttpPost]
