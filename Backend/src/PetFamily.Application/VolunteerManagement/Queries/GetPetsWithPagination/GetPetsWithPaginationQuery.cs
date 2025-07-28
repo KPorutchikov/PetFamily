@@ -3,5 +3,6 @@
 namespace PetFamily.Application.VolunteerManagement.Queries.GetPetsWithPagination;
 
 public record GetPetsWithPaginationQuery(
-    Guid? Id, string? Name, string? Description, Guid? SpeciesId, Guid? BreedId, 
-    string? SortBy, string? SortDirection, int? Page, int? PageSize) : IQuery;
+    Guid? PetId, Guid? VolunteerId, string? Name, string? Description, Guid? SpeciesId, 
+    Guid? BreedId, string? Color, string? AddressCity, string? AddressStreet, 
+    string? SortByColumns, int? Page, int? PageSize) : IQuery;

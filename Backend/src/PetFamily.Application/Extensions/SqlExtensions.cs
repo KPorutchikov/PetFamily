@@ -27,4 +27,27 @@ public static class SqlExtensions
 
         parameters.Add("@SortBy", $"{sortBy} {sortDirection}" ?? "1");
     }
+    
+    public static void ApplyMultiSorting(
+        this StringBuilder sqlBuilder,
+        string? sortColumns)
+    {
+        if (string.IsNullOrWhiteSpace(sortColumns))
+            return;
+
+        var res = sortColumns.Split(',')
+                             .Select(s => { var parts = s.Split(' ');
+                                            return new {column    = parts[0].Trim().ToLower(), 
+                                                        direction = parts.Length > 1 ? parts[1].Trim().ToUpper() : ""};
+                                          }).ToList();
+        if (res.Count > 0)
+        {
+            var strSql = Environment.NewLine + "ORDER BY";
+            
+            foreach (var c in res)
+                strSql += $" {c.column} {c.direction},";
+
+            sqlBuilder.Append(strSql[..^1] + Environment.NewLine);
+        }
+    }
 }
