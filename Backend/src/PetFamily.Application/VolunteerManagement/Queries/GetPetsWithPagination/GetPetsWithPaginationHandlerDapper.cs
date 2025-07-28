@@ -44,68 +44,68 @@ public class GetPetsWithPaginationHandlerDapper : IQueryHandler<PagedList<PetDto
             WHERE 1 = 1
             """);
 
-        if (!string.IsNullOrWhiteSpace(query.Id.ToString()))
+        if (!string.IsNullOrWhiteSpace(query.PetId.ToString()))
         {
             sqlPart = " AND p.id = uuid(@Id)";
             sql.Append(sqlPart);
-            parameters.Add("Id", $"{query.Id}");
+            parameters.Add("Id", $"{query.PetId}");
         }
         else
         {
-            if (!string.IsNullOrWhiteSpace(query.volunteer_id.ToString()))
+            if (!string.IsNullOrWhiteSpace(query.VolunteerId.ToString()))
             {
                 sqlPart = " AND p.volunteer_id = uuid(@volunteer_id)";
                 sql.Append(sqlPart);
-                parameters.Add("volunteer_id", query.volunteer_id);
+                parameters.Add("volunteer_id", query.VolunteerId);
             }
 
-            if (!string.IsNullOrWhiteSpace(query.name))
+            if (!string.IsNullOrWhiteSpace(query.Name))
             {
                 sqlPart = " AND p.name LIKE @Name";
                 sql.Append(sqlPart);
-                parameters.Add("Name", $"%{query.name}%");
+                parameters.Add("Name", $"%{query.Name}%");
             }
 
-            if (!string.IsNullOrWhiteSpace(query.species_id.ToString()))
+            if (!string.IsNullOrWhiteSpace(query.SpeciesId.ToString()))
             {
                 sqlPart = " AND p.species_id = uuid(@species_id)";
                 sql.Append(sqlPart);
-                parameters.Add("species_id", query.species_id);
+                parameters.Add("species_id", query.SpeciesId);
             }
 
-            if (!string.IsNullOrWhiteSpace(query.breed_id.ToString()))
+            if (!string.IsNullOrWhiteSpace(query.BreedId.ToString()))
             {
                 sqlPart = " AND p.breed_id = uuid(@breed_id)";
                 sql.Append(sqlPart);
-                parameters.Add("breed_id", query.breed_id);
+                parameters.Add("breed_id", query.BreedId);
             }
 
-            if (!string.IsNullOrWhiteSpace(query.color))
+            if (!string.IsNullOrWhiteSpace(query.Color))
             {
                 sqlPart = " AND p.color = @color";
                 sql.Append(sqlPart);
-                parameters.Add("color", $"{query.color}");
+                parameters.Add("color", $"{query.Color}");
             }
 
-            if (!string.IsNullOrWhiteSpace(query.address_city))
+            if (!string.IsNullOrWhiteSpace(query.AddressCity))
             {
                 sqlPart = " AND p.address_city LIKE @AddressCity";
                 sql.Append(sqlPart);
-                parameters.Add("address_city", $"%{query.address_city}%");
+                parameters.Add("address_city", $"%{query.AddressCity}%");
             }
 
-            if (!string.IsNullOrWhiteSpace(query.address_street))
+            if (!string.IsNullOrWhiteSpace(query.AddressStreet))
             {
                 sqlPart = " AND p.address_street LIKE @address_street";
                 sql.Append(sqlPart);
-                parameters.Add("address_street", $"%{query.address_street}%");
+                parameters.Add("address_street", $"%{query.AddressStreet}%");
             }
 
-            if (!string.IsNullOrWhiteSpace(query.description))
+            if (!string.IsNullOrWhiteSpace(query.Description))
             {
                 sqlPart = " AND p.description LIKE @description";
                 sql.Append(sqlPart);
-                parameters.Add("description", $"%{query.description}%");
+                parameters.Add("description", $"%{query.Description}%");
             }
 
             if (!string.IsNullOrWhiteSpace(query.SortByColumns))
