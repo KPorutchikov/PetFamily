@@ -2,28 +2,29 @@ using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Volunteers.Create;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateRequisiteDetails;
-using PetFamily.Application.Volunteers.UpdateSocialNetwork;
-using PetFamily.Infrastructure;
+using PetFamily.Application.IntegrationTests.Extensions;
+using PetFamily.Volunteers.Application.Volunteers.Create;
+using PetFamily.Volunteers.Application.Volunteers.UpdateMainInfo;
+using PetFamily.Volunteers.Application.Volunteers.UpdateRequisiteDetails;
+using PetFamily.Volunteers.Application.Volunteers.UpdateSocialNetwork;
+using PetFamily.Volunteers.Infrastructure.Database;
 using Xunit;
 
 namespace PetFamily.Application.IntegrationTests.Volunteers;
 
-public class VolunteerTests : IClassFixture<IntegrationTestsWebFactory>, IAsyncLifetime
+public class VolunteerTests : IClassFixture<VolunteerIntegrationTestsWebFactory>, IAsyncLifetime
 {
-    private readonly IntegrationTestsWebFactory _factory;
+    private readonly VolunteerIntegrationTestsWebFactory _factory;
     private readonly CreateVolunteerHandler _volunteerHandler;
-    private readonly ApplicationDbContext _dbContext;
+    private readonly VolunteerDbContext _dbContext;
     private readonly IServiceScope _scope;
     private readonly Fixture _fixture;
 
-    public VolunteerTests(IntegrationTestsWebFactory factory)
+    public VolunteerTests(VolunteerIntegrationTestsWebFactory factory)
     {
         _factory = factory;
         _scope = factory.Services.CreateScope();
-        _dbContext = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        _dbContext = _scope.ServiceProvider.GetRequiredService<VolunteerDbContext>();
         _volunteerHandler = _scope.ServiceProvider.GetRequiredService<CreateVolunteerHandler>();
         _fixture = new Fixture();
     }
