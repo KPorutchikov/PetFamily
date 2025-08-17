@@ -1,6 +1,7 @@
-using PetFamily.Domain.Shared;
-using PetFamily.Domain.Volunteers;
-using PetFamily.Domain.Volunteers.ValueObjects;
+using PetFamily.Shared.Core.Shared;
+using PetFamily.Shared.SharedKernel.ValueObjects.Ids;
+using PetFamily.Volunteers.Domain.Models;
+using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Domain.UnitTests;
 

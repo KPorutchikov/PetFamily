@@ -29,7 +29,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\PetFamily.API\PetFamily.API.csproj" />
+      <ProjectReference Include="..\src\PetFamily.Web\PetFamily.Web.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Species\" />
     </ItemGroup>
 
 </Project>
