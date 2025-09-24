@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Shared.Framework;
 using PetFamily.Species.Application.Commands.AddBreed;
 using PetFamily.Species.Application.Commands.AddSpecies;
@@ -10,6 +11,7 @@ using PetFamily.Species.Contracts.Requests;
 
 namespace PetFamily.Species.Presentation.Controllers;
 
+[Authorize]
 public class SpeciesController : ApplicationController
 {
     [HttpGet("species")]

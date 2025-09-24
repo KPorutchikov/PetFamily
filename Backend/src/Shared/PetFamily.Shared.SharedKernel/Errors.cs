@@ -21,6 +21,11 @@ public static class Errors
             var val = name == null ? " " : " " + name + " ";
             return Error.Validation("length.is.invalid", $"invalid{val}length");
         }
+        
+        public static Error AlreadyExist()
+        {
+            return Error.Validation("record.already.exist", "record already exist");
+        }
     }
 
     public static class Volunteer

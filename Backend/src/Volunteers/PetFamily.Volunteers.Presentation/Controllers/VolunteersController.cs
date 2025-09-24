@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Shared.Framework;
 using PetFamily.Volunteers.Application.VolunteerManagement.Queries.GetPet;
@@ -22,6 +23,7 @@ using PetFamily.Volunteers.Presentation.Volunteers.Requests;
 
 namespace PetFamily.Volunteers.Presentation.Controllers;
 
+[Authorize]
 public class VolunteersController : ApplicationController
 {
     [HttpGet("{id:guid}/volunteer")]
