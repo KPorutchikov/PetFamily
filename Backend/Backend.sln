@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Web", "src\PetFamily.Web\PetFamily.Web.csproj", "{D4ED0B69-65A3-4155-A20B-5BCB3FC0E255}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "src\Web\Web.csproj", "{D4ED0B69-65A3-4155-A20B-5BCB3FC0E255}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8CD96FB4-78E0-40A8-BA82-61EF6ADA730B}"
 	ProjectSection(SolutionItems) = preProject
@@ -51,6 +51,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Species.Contracts", "src\Species\PetFamily.Species.Contracts\PetFamily.Species.Contracts.csproj", "{0321AC93-DDF8-40BC-9FBB-9E6C31765310}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Volunteers.Contracts", "src\Volunteers\PetFamily.Volunteers.Contracts\PetFamily.Volunteers.Contracts.csproj", "{9EAF764E-439D-4F1A-B2CA-E2A5192D6697}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accounts", "Accounts", "{6C61F8BD-AA2B-472E-BB7F-02B080591CE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Domain", "src\Accounts\PetFamily.Accounts.Domain\PetFamily.Accounts.Domain.csproj", "{0300179D-F3F0-45A7-9105-881F4F6B4ECE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Application", "src\Accounts\PetFamily.Accounts.Application\PetFamily.Accounts.Application.csproj", "{18DD28EE-3D44-4377-85D6-6C86EC7F7094}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Infrastructure", "src\Accounts\PetFamily.Accounts.Infrastructure\PetFamily.Accounts.Infrastructure.csproj", "{8C3D256B-63B7-44E9-AE17-A46A09F2F0B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Presentation", "src\Accounts\PetFamily.Accounts.Presentation\PetFamily.Accounts.Presentation.csproj", "{7FA82A9B-0FA6-4DBA-BC04-18B771A959CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Contracts", "src\Accounts\PetFamily.Accounts.Contracts\PetFamily.Accounts.Contracts.csproj", "{36CFC65F-59FD-4654-833B-724495BEF69E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +141,26 @@ Global
 		{9EAF764E-439D-4F1A-B2CA-E2A5192D6697}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EAF764E-439D-4F1A-B2CA-E2A5192D6697}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EAF764E-439D-4F1A-B2CA-E2A5192D6697}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0300179D-F3F0-45A7-9105-881F4F6B4ECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0300179D-F3F0-45A7-9105-881F4F6B4ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0300179D-F3F0-45A7-9105-881F4F6B4ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0300179D-F3F0-45A7-9105-881F4F6B4ECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18DD28EE-3D44-4377-85D6-6C86EC7F7094}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18DD28EE-3D44-4377-85D6-6C86EC7F7094}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18DD28EE-3D44-4377-85D6-6C86EC7F7094}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18DD28EE-3D44-4377-85D6-6C86EC7F7094}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C3D256B-63B7-44E9-AE17-A46A09F2F0B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C3D256B-63B7-44E9-AE17-A46A09F2F0B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C3D256B-63B7-44E9-AE17-A46A09F2F0B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C3D256B-63B7-44E9-AE17-A46A09F2F0B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FA82A9B-0FA6-4DBA-BC04-18B771A959CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FA82A9B-0FA6-4DBA-BC04-18B771A959CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FA82A9B-0FA6-4DBA-BC04-18B771A959CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA82A9B-0FA6-4DBA-BC04-18B771A959CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36CFC65F-59FD-4654-833B-724495BEF69E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36CFC65F-59FD-4654-833B-724495BEF69E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36CFC65F-59FD-4654-833B-724495BEF69E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36CFC65F-59FD-4654-833B-724495BEF69E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9F36A572-F551-48DA-B0EA-C38D02B42A90} = {0639C332-D559-4CDB-87FF-67786A5F1B41}
@@ -150,5 +182,11 @@ Global
 		{F70A395D-441D-42DF-87C7-9C29A5331B63} = {5323EF70-4368-4C95-9583-A0BDA82847A3}
 		{0321AC93-DDF8-40BC-9FBB-9E6C31765310} = {94528C99-D87C-432B-9708-F1234B69C9D7}
 		{9EAF764E-439D-4F1A-B2CA-E2A5192D6697} = {6CFDD18C-5C70-400B-9044-B19C7CD32C8A}
+		{6C61F8BD-AA2B-472E-BB7F-02B080591CE5} = {83F534E3-3E94-4F51-8B33-AF32F0868F2C}
+		{0300179D-F3F0-45A7-9105-881F4F6B4ECE} = {6C61F8BD-AA2B-472E-BB7F-02B080591CE5}
+		{18DD28EE-3D44-4377-85D6-6C86EC7F7094} = {6C61F8BD-AA2B-472E-BB7F-02B080591CE5}
+		{8C3D256B-63B7-44E9-AE17-A46A09F2F0B2} = {6C61F8BD-AA2B-472E-BB7F-02B080591CE5}
+		{7FA82A9B-0FA6-4DBA-BC04-18B771A959CE} = {6C61F8BD-AA2B-472E-BB7F-02B080591CE5}
+		{36CFC65F-59FD-4654-833B-724495BEF69E} = {6C61F8BD-AA2B-472E-BB7F-02B080591CE5}
 	EndGlobalSection
 EndGlobal

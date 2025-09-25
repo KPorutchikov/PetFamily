@@ -1,10 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using PetFamily.Accounts.Application;
+using PetFamily.Accounts.Infrastructure;
+using PetFamily.Shared.Framework.Authorization;
 using PetFamily.Species.Application.DependencyInjection;
 using PetFamily.Species.Infrastructure.DependencyInjection;
-using PetFamily.Species.Presentation.Controllers;
 using PetFamily.Volunteers.Application.DependencyInjection;
 using PetFamily.Volunteers.Infrastructure.DependencyInjection;
-using PetFamily.Volunteers.Presentation.Controllers;
 using PetFamily.Web.Middlewares;
 using Serilog;
 using Serilog.Events;
@@ -33,22 +35,43 @@ try
         .AddVolunteersApplication()
         .AddVolunteersInfrastructure(builder.Configuration);
 
-    builder.Services.AddControllers()
-        .AddApplicationPart(typeof(SpeciesController).Assembly)
-        .AddApplicationPart(typeof(VolunteersController).Assembly);
-
-    builder.Services.AddEndpointsApiExplorer();
+    
     builder.Services.AddSwaggerGen(c =>
     {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "PetFamily", Version = "v1" });
+    
         c.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" });
+        
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please insert JWT with Bearer into field",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey
+            });
+        
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+            {   new OpenApiSecurityScheme { Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme,
+                                                                              Id = "Bearer"}}, []
+            }});
     });
 
     builder.Services.AddSerilog();
 
+    builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
+    builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+
+
+    builder.Services.AddAccountsInfrastructure(builder.Configuration);
+    builder.Services.AddAccountsApplication();
+    
+    builder.Services.AddControllers();
+
+    builder.Services.AddEndpointsApiExplorer();
+    
     var app = builder.Build();
 
     app.UseExceptionMiddleware();
-
     app.UseSerilogRequestLogging();
 
     if (app.Environment.IsDevelopment())
@@ -60,7 +83,10 @@ try
     }
 
     app.UseHttpsRedirection();
+    
+    app.UseAuthentication();
     app.UseAuthorization();
+    
     app.MapControllers();
     app.Run();
 }
