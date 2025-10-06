@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial_Auth : Migration
+    public partial class Initial_auth : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,16 +16,17 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                 name: "accounts");
 
             migrationBuilder.CreateTable(
-                name: "permission",
+                name: "permissions",
                 schema: "accounts",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    code = table.Column<string>(type: "text", nullable: false)
+                    code = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_permission", x => x.id);
+                    table.PrimaryKey("pk_permissions", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,6 +50,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
+                    social_networks = table.Column<string>(type: "text", nullable: false),
                     user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     normalized_user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -70,33 +72,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "permission_role",
-                schema: "accounts",
-                columns: table => new
-                {
-                    permissions_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    roles_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_permission_role", x => new { x.permissions_id, x.roles_id });
-                    table.ForeignKey(
-                        name: "fk_permission_role_permission_permissions_id",
-                        column: x => x.permissions_id,
-                        principalSchema: "accounts",
-                        principalTable: "permission",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_permission_role_roles_roles_id",
-                        column: x => x.roles_id,
-                        principalSchema: "accounts",
-                        principalTable: "roles",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "role_claims",
                 schema: "accounts",
                 columns: table => new
@@ -115,6 +90,54 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         column: x => x.role_id,
                         principalSchema: "accounts",
                         principalTable: "roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "role_permissions",
+                schema: "accounts",
+                columns: table => new
+                {
+                    role_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    permission_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_role_permissions", x => new { x.role_id, x.permission_id });
+                    table.ForeignKey(
+                        name: "fk_role_permissions_permissions_permission_id",
+                        column: x => x.permission_id,
+                        principalSchema: "accounts",
+                        principalTable: "permissions",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_role_permissions_roles_role_id",
+                        column: x => x.role_id,
+                        principalSchema: "accounts",
+                        principalTable: "roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "admin_accounts",
+                schema: "accounts",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    full_name = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_admin_accounts", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_admin_accounts_users_user_id",
+                        column: x => x.user_id,
+                        principalSchema: "accounts",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -214,16 +237,30 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_permission_role_roles_id",
+                name: "ix_admin_accounts_user_id",
                 schema: "accounts",
-                table: "permission_role",
-                column: "roles_id");
+                table: "admin_accounts",
+                column: "user_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_permissions_code",
+                schema: "accounts",
+                table: "permissions",
+                column: "code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_role_claims_role_id",
                 schema: "accounts",
                 table: "role_claims",
                 column: "role_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_role_permissions_permission_id",
+                schema: "accounts",
+                table: "role_permissions",
+                column: "permission_id");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -268,11 +305,15 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "permission_role",
+                name: "admin_accounts",
                 schema: "accounts");
 
             migrationBuilder.DropTable(
                 name: "role_claims",
+                schema: "accounts");
+
+            migrationBuilder.DropTable(
+                name: "role_permissions",
                 schema: "accounts");
 
             migrationBuilder.DropTable(
@@ -292,7 +333,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                 schema: "accounts");
 
             migrationBuilder.DropTable(
-                name: "permission",
+                name: "permissions",
                 schema: "accounts");
 
             migrationBuilder.DropTable(

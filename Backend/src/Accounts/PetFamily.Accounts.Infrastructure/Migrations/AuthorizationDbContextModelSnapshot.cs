@@ -153,25 +153,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.ToTable("user_tokens", "accounts");
                 });
 
-            modelBuilder.Entity("PermissionRole", b =>
-                {
-                    b.Property<Guid>("PermissionsId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("permissions_id");
-
-                    b.Property<Guid>("RolesId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("roles_id");
-
-                    b.HasKey("PermissionsId", "RolesId")
-                        .HasName("pk_permission_role");
-
-                    b.HasIndex("RolesId")
-                        .HasDatabaseName("ix_permission_role_roles_id");
-
-                    b.ToTable("permission_role", "accounts");
-                });
-
             modelBuilder.Entity("PetFamily.Accounts.Domain.Roles.Permission", b =>
                 {
                     b.Property<Guid>("Id")
@@ -184,10 +165,20 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("code");
 
-                    b.HasKey("Id")
-                        .HasName("pk_permission");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
 
-                    b.ToTable("permission", "accounts");
+                    b.HasKey("Id")
+                        .HasName("pk_permissions");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_permissions_code");
+
+                    b.ToTable("permissions", "accounts");
                 });
 
             modelBuilder.Entity("PetFamily.Accounts.Domain.Roles.Role", b =>
@@ -220,6 +211,51 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("roles", "accounts");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Roles.RolePermission", b =>
+                {
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("permission_id");
+
+                    b.HasKey("RoleId", "PermissionId")
+                        .HasName("pk_role_permissions");
+
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_role_permissions_permission_id");
+
+                    b.ToTable("role_permissions", "accounts");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Users.AdminAccount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("full_name");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_admin_accounts");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_admin_accounts_user_id");
+
+                    b.ToTable("admin_accounts", "accounts");
                 });
 
             modelBuilder.Entity("PetFamily.Accounts.Domain.Users.User", b =>
@@ -280,6 +316,11 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text")
                         .HasColumnName("security_stamp");
+
+                    b.Property<string>("SocialNetworks")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("social_networks");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean")
@@ -360,21 +401,42 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasConstraintName("fk_user_tokens_users_user_id");
                 });
 
-            modelBuilder.Entity("PermissionRole", b =>
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Roles.RolePermission", b =>
                 {
-                    b.HasOne("PetFamily.Accounts.Domain.Roles.Permission", null)
+                    b.HasOne("PetFamily.Accounts.Domain.Roles.Permission", "Permission")
                         .WithMany()
-                        .HasForeignKey("PermissionsId")
+                        .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_permission_role_permission_permissions_id");
+                        .HasConstraintName("fk_role_permissions_permissions_permission_id");
 
-                    b.HasOne("PetFamily.Accounts.Domain.Roles.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
+                    b.HasOne("PetFamily.Accounts.Domain.Roles.Role", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_permission_role_roles_roles_id");
+                        .HasConstraintName("fk_role_permissions_roles_role_id");
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Users.AdminAccount", b =>
+                {
+                    b.HasOne("PetFamily.Accounts.Domain.Users.User", "User")
+                        .WithOne()
+                        .HasForeignKey("PetFamily.Accounts.Domain.Users.AdminAccount", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_admin_accounts_users_user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Roles.Role", b =>
+                {
+                    b.Navigation("RolePermissions");
                 });
 #pragma warning restore 612, 618
         }

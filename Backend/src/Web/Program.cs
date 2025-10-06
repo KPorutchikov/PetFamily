@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using PetFamily.Accounts.Application;
 using PetFamily.Accounts.Infrastructure;
+using PetFamily.Accounts.Infrastructure.Seeding;
+using PetFamily.Accounts.Presentation;
 using PetFamily.Shared.Framework.Authorization;
 using PetFamily.Species.Application.DependencyInjection;
 using PetFamily.Species.Infrastructure.DependencyInjection;
@@ -13,8 +15,10 @@ using Serilog.Events;
 
 try
 {
+    DotNetEnv.Env.Load();
+    
     var builder = WebApplication.CreateBuilder(args);
-
+    
     Log.Logger = new LoggerConfiguration()
         .WriteTo.Console()
         .WriteTo.Seq(builder.Configuration.GetConnectionString("Seq") ?? throw new ArgumentNullException("Seq"))
@@ -60,10 +64,10 @@ try
 
     builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
     builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-
-
-    builder.Services.AddAccountsInfrastructure(builder.Configuration);
+    
     builder.Services.AddAccountsApplication();
+    builder.Services.AddAccountsPresentation();
+    builder.Services.AddAccountsInfrastructure(builder.Configuration);
     
     builder.Services.AddControllers();
 
@@ -71,6 +75,9 @@ try
     
     var app = builder.Build();
 
+    var accountsSeeder = app.Services.GetRequiredService<AccountsSeeder>();
+    await accountsSeeder.SeedAsync();
+    
     app.UseExceptionMiddleware();
     app.UseSerilogRequestLogging();
 

@@ -6,6 +6,8 @@ namespace PetFamily.Accounts.Contracts;
 
 public interface IAccountsContract
 {
-    Task<UnitResult<ErrorList>> RegisterUser(
-        RegisterUserRequest request, CancellationToken cancellation = default);
+    // Task<UnitResult<ErrorList>> RegisterUser(
+    //     RegisterUserRequest request, CancellationToken cancellation = default);
+
+    Task<HashSet<string>> GetUserPermissionCodes(Guid userId);
 }

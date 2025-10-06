@@ -1,13 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Accounts.Application.Commands.Login;
 using PetFamily.Accounts.Application.Commands.Register;
 using PetFamily.Accounts.Contracts.Requests;
+using PetFamily.Accounts.Domain.Roles;
 using PetFamily.Shared.Framework;
+using PetFamily.Shared.Framework.Authorization;
 
 namespace PetFamily.Accounts.Presentation;
 
 public class AccountsController : ApplicationController
 {
+   
+    [Permission(Permissions.Volunteer.VolunteerCreate)]
+    [HttpPost("create")]
+    public IActionResult CreateVolunteer()
+    {
+        return Ok();
+    }
+    
     [HttpPost("registration")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterUserRequest request,

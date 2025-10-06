@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -11,6 +13,10 @@ namespace PetFamily.Accounts.Infrastructure;
 
 public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbContext<User,Role,Guid>
 {
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<AdminAccount> AdminAccounts => Set<AdminAccount>();
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(configuration.GetConnectionString("Database"));
@@ -28,6 +34,22 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
         
         modelBuilder.Entity<User>()
             .ToTable("users");
+
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Roles)
+            .WithMany()
+            .UsingEntity<IdentityUserRole<Guid>>();
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.SocialNetworks)
+            .HasConversion(
+                u => JsonSerializer.Serialize(u, JsonSerializerOptions.Default),
+                json => JsonSerializer.Deserialize<List<SocialNetwork>>(json, JsonSerializerOptions.Default)!);
+
+        modelBuilder.Entity<AdminAccount>()
+            .HasOne(u => u.User)
+            .WithOne()
+            .HasForeignKey<AdminAccount>(u => u.UserId);
         
         modelBuilder.Entity<Role>()
             .ToTable("roles");
@@ -47,6 +69,33 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
         modelBuilder.Entity<IdentityUserLogin<Guid>>()
             .ToTable("user_logins");
 
+        modelBuilder.Entity<Permission>()
+            .ToTable("permissions");
+
+        modelBuilder.Entity<Permission>()
+            .HasIndex(p => p.Code)
+            .IsUnique();
+        
+        modelBuilder.Entity<Permission>()
+            .Property(p => p.Description).HasMaxLength(500);
+        
+        modelBuilder.Entity<RolePermission>()
+            .ToTable("role_permissions");
+        
+        modelBuilder.Entity<RolePermission>()
+            .HasKey(rp => new { rp.RoleId, rp.PermissionId } );
+        
+        modelBuilder.Entity<RolePermission>()
+            .HasOne(rp => rp.Role)
+            .WithMany(r => r.RolePermissions)
+            .HasForeignKey(rp => rp.RoleId);
+        
+        modelBuilder.Entity<RolePermission>()
+            .HasOne(rp => rp.Permission)
+            .WithMany()
+            .HasForeignKey(rp => rp.PermissionId);
+            
+
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(AuthorizationDbContext).Assembly,
             type => type.FullName?.Contains("Configurations.Write") ?? false);
@@ -55,4 +104,3 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
     private ILoggerFactory CreateLoggerFactory() =>
         LoggerFactory.Create(builder => {builder.AddConsole(); });
 }
-
