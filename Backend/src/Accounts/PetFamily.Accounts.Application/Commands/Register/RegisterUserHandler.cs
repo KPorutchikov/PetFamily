@@ -21,16 +21,14 @@ public class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
     public async Task<UnitResult<ErrorList>> Handle(
         RegisterUserCommand command, CancellationToken cancellationToken)
     {
-        var user = new User
-        {
-            Email = command.Email,
-            UserName = command.UserName
-        };
+        var user = User.CreateParticipant(command.UserName, command.Email);
         
         var result = await _userManager.CreateAsync(user, command.Password);
 
         if (result.Succeeded)
         {
+            await _userManager.AddToRoleAsync(user, "Participant");
+            
             _logger.LogInformation("User created: {userName} a new account with password.", command.UserName);
             return Result.Success<ErrorList>();
         }

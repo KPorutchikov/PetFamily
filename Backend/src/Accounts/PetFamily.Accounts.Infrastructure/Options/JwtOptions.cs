@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Accounts.Infrastructure;
+﻿namespace PetFamily.Accounts.Infrastructure.Options;
 
 public class JwtOptions
 {
@@ -8,4 +8,6 @@ public class JwtOptions
     public int TokenLifetimeInMinutes { get; set; }
     
     public string Issuer { get; set; } = String.Empty;
+    
+    public string Audience { get; set; } = String.Empty;
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Shared.Framework;
+using PetFamily.Shared.Framework.Authorization;
 using PetFamily.Volunteers.Application.VolunteerManagement.Queries.GetPet;
 using PetFamily.Volunteers.Application.VolunteerManagement.Queries.GetPetsWithPagination;
 using PetFamily.Volunteers.Application.VolunteerManagement.Queries.GetVolunteersWithPagination;
@@ -26,6 +27,7 @@ namespace PetFamily.Volunteers.Presentation.Controllers;
 [Authorize]
 public class VolunteersController : ApplicationController
 {
+    [Permission(Permissions.Volunteer.VolunteerRead)]
     [HttpGet("{id:guid}/volunteer")]
     public async Task<ActionResult> VolunteerDapper(
         [FromRoute] Guid id,
@@ -38,6 +40,7 @@ public class VolunteersController : ApplicationController
         return Ok(volunteer);
     }
     
+    [Permission(Permissions.Volunteer.VolunteerRead)]
     [HttpGet]
     public async Task<ActionResult> VolunteersWithPaginationDapper(
         [FromQuery] GetVolunteersWithPaginationRequest request,
@@ -49,6 +52,7 @@ public class VolunteersController : ApplicationController
         return Ok(volunteers);
     }
     
+    [Permission(Permissions.Volunteer.VolunteerRead)]
     [HttpGet("/pet")]
     public async Task<ActionResult> PetDapper(
         [FromQuery] GetPetRequest request,
@@ -60,6 +64,7 @@ public class VolunteersController : ApplicationController
         return Ok(pet);
     }
     
+    [Permission(Permissions.Volunteer.VolunteerRead)]
     [HttpGet("/pets")]
     public async Task<ActionResult> PetsWithPaginationDapper(
         [FromQuery] GetPetsWithPaginationRequest request,
@@ -71,6 +76,7 @@ public class VolunteersController : ApplicationController
         return Ok(pets);
     }
 
+    [Permission(Permissions.Volunteer.VolunteerCreate)]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
         [FromServices] CreateVolunteerHandler handler,
@@ -82,6 +88,7 @@ public class VolunteersController : ApplicationController
         return result.Value;
     }
 
+    [Permission(Permissions.Volunteer.VolunteerCreate)]
     [HttpPost("{id:guid}/pet")]
     public async Task<ActionResult> AddPet(
         [FromRoute] Guid id,
@@ -97,6 +104,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
     
+    [Permission(Permissions.Volunteer.VolunteerUpdate)]
     [HttpPut("pet/{id:guid}/main_photo")]
     public async Task<ActionResult> UpdatePetMainPhoto(
         [FromRoute] Guid id,
@@ -112,6 +120,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Volunteer.VolunteerCreate)]
     [HttpPost("pet/{id:guid}/photos")]
     public async Task<IActionResult> AddPetPhotos(
         [FromRoute] Guid id,
@@ -131,6 +140,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Volunteer.VolunteerMove)]
     [HttpPost("pet/{id:guid}/serial_number")]
     public async Task<ActionResult> MovePet(
         [FromRoute] Guid id,
@@ -146,6 +156,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
     
+    [Permission(Permissions.Volunteer.VolunteerUpdate)]
     [HttpPut("pet/{id:guid}/main")]
     public async Task<ActionResult> UpdatePet(
         [FromRoute] Guid id,
@@ -160,6 +171,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
     
+    [Permission(Permissions.Volunteer.VolunteerUpdate)]
     [HttpPut("pet/{id:guid}/status")]
     public async Task<ActionResult> UpdateStatusPet(
         [FromRoute] Guid id,
@@ -174,6 +186,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
     
+    [Permission(Permissions.Volunteer.VolunteerDelete)]
     [HttpDelete("pet/{id:guid}/soft")]
     public async Task<ActionResult> SoftDeletePet(
         [FromRoute] Guid id,
@@ -188,6 +201,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
     
+    [Permission(Permissions.Volunteer.VolunteerDelete)]
     [HttpDelete("pet/{id:guid}/hard")]
     public async Task<ActionResult> HardDeletePet(
         [FromRoute] Guid id,
@@ -202,7 +216,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
     
-
+    [Permission(Permissions.Volunteer.VolunteerUpdate)]
     [HttpPut("{id:guid}/social-networks")]
     public async Task<ActionResult> UpdateSocialNetworks(
         [FromRoute] Guid id,
@@ -218,6 +232,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Volunteer.VolunteerUpdate)]
     [HttpPut("{id:guid}/requisite-details")]
     public async Task<ActionResult> UpdateRequisiteDetails(
         [FromRoute] Guid id,
@@ -233,6 +248,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Volunteer.VolunteerUpdate)]
     [HttpPut("{id:guid}/main-info")]
     public async Task<ActionResult> UpdateMainInfo(
         [FromRoute] Guid id,
@@ -247,6 +263,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Volunteer.VolunteerDelete)]
     [HttpDelete("{id:guid}/soft")]
     public async Task<ActionResult> SoftDelete(
         [FromRoute] Guid id,
@@ -263,6 +280,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Volunteer.VolunteerDelete)]
     [HttpDelete("{id:guid}/hard")]
     public async Task<ActionResult> HardDelete(
         [FromRoute] Guid id,
