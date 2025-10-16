@@ -258,6 +258,32 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.ToTable("admin_accounts", "accounts");
                 });
 
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Users.ParticipantAccount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("full_name");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_participant_accounts");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_participant_accounts_user_id");
+
+                    b.ToTable("participant_accounts", "accounts");
+                });
+
             modelBuilder.Entity("PetFamily.Accounts.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -342,6 +368,37 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("users", "accounts");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Users.VolunteerAccount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Experience")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("experience");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("full_name");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_volunteer_accounts");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_volunteer_accounts_user_id");
+
+                    b.ToTable("volunteer_accounts", "accounts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -430,6 +487,30 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_admin_accounts_users_user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Users.ParticipantAccount", b =>
+                {
+                    b.HasOne("PetFamily.Accounts.Domain.Users.User", "User")
+                        .WithOne()
+                        .HasForeignKey("PetFamily.Accounts.Domain.Users.ParticipantAccount", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_participant_accounts_users_user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Users.VolunteerAccount", b =>
+                {
+                    b.HasOne("PetFamily.Accounts.Domain.Users.User", "User")
+                        .WithOne()
+                        .HasForeignKey("PetFamily.Accounts.Domain.Users.VolunteerAccount", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_volunteer_accounts_users_user_id");
 
                     b.Navigation("User");
                 });

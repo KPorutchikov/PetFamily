@@ -22,12 +22,13 @@ public class User : IdentityUser<Guid>
             _roles = [role]
         };
     }
-    public static User CreateParticipant(string userName, string email)
+    public static User CreateParticipant(string userName, string email, Role role)
     {
         return new User
         {
             UserName = userName,
-            Email = email
+            Email = email,
+            _roles = [role]
         };
     }
 }

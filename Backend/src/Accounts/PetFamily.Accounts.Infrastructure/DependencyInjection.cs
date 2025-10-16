@@ -7,11 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application;
 using PetFamily.Accounts.Application.Commands.Login;
+using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Domain.Roles;
 using PetFamily.Accounts.Domain.Users;
 using PetFamily.Accounts.Infrastructure.IdentityManagers;
 using PetFamily.Accounts.Infrastructure.Options;
 using PetFamily.Accounts.Infrastructure.Seeding;
+using PetFamily.Shared.Core.Abstractions;
 
 namespace PetFamily.Accounts.Infrastructure;
 
@@ -27,6 +29,8 @@ public static class DependencyInjection
         services.Configure<AdminOptions>(configuration.GetSection(AdminOptions.ADMIN));
         services.AddTransient<ITokenProvider, JwtTokenProvider>();
         services.AddScoped<LoginHandler>();
+        services.AddScoped<IParticipantAccountManager, ParticipantAccountManager>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<AuthorizationDbContext>();
         services.AddSingleton<AccountsSeeder>();
