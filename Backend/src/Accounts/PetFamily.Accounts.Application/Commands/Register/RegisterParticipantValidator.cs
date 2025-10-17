@@ -4,9 +4,9 @@ using PetFamily.Shared.SharedKernel;
 
 namespace PetFamily.Accounts.Application.Commands.Register;
 
-public class RegisterUserValidator : AbstractValidator<RegisterUserCommand>
+public class RegisterParticipantValidator : AbstractValidator<RegisterParticipantCommand>
 {
-    public RegisterUserValidator()
+    public RegisterParticipantValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty().WithError(Error.Validation("email.is.invalid", "Не коректный формат Email", "email"))

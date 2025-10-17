@@ -16,6 +16,8 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     public DbSet<AdminAccount> AdminAccounts => Set<AdminAccount>();
+    public DbSet<ParticipantAccount> ParticipantAccounts => Set<ParticipantAccount>();
+    public DbSet<VolunteerAccount> VolunteerAccounts => Set<VolunteerAccount>();
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -46,6 +48,16 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
                 u => JsonSerializer.Serialize(u, JsonSerializerOptions.Default),
                 json => JsonSerializer.Deserialize<List<SocialNetwork>>(json, JsonSerializerOptions.Default)!);
 
+        modelBuilder.Entity<VolunteerAccount>()
+            .HasOne(u => u.User)
+            .WithOne()
+            .HasForeignKey<VolunteerAccount>(u => u.UserId);
+        
+        modelBuilder.Entity<ParticipantAccount>()
+            .HasOne(u => u.User)
+            .WithOne()
+            .HasForeignKey<ParticipantAccount>(u => u.UserId);
+        
         modelBuilder.Entity<AdminAccount>()
             .HasOne(u => u.User)
             .WithOne()

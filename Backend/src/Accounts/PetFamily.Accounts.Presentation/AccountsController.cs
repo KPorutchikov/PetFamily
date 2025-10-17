@@ -13,16 +13,17 @@ public class AccountsController : ApplicationController
 {
    
     [Permission(Permissions.Volunteer.VolunteerCreate)]
-    [HttpPost("create")]
-    public IActionResult CreateVolunteer()
+    [HttpPost("test")]
+    public IActionResult Test()
     {
         return Ok();
     }
     
+    [Permission(Permissions.Volunteer.VolunteerCreate)]
     [HttpPost("registration")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterUserRequest request,
-        [FromServices] RegisterUserHandler handel,
+        [FromServices] RegisterParticipantHandler handel,
         CancellationToken cancellationToken)
     {
         var result = await handel.Handle(request.ToCommand(), cancellationToken);
