@@ -76,7 +76,7 @@ try
     var app = builder.Build();
 
     var accountsSeeder = app.Services.GetRequiredService<AccountsSeeder>();
-    await accountsSeeder.SeedAsync();
+    await accountsSeeder.SeedAsync(new CancellationToken());
     
     app.UseExceptionMiddleware();
     app.UseSerilogRequestLogging();

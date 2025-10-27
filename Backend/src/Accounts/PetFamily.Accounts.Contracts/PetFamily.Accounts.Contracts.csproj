@@ -13,7 +13,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\PetFamily.Shared.Core\PetFamily.Shared.Core.csproj" />
       <ProjectReference Include="..\..\Shared\PetFamily.Shared.SharedKernel\PetFamily.Shared.SharedKernel.csproj" />
-      <ProjectReference Include="..\PetFamily.Accounts.Application\PetFamily.Accounts.Application.csproj" />
     </ItemGroup>
 
 </Project>

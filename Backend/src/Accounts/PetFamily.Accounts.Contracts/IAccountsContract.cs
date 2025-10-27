@@ -9,5 +9,5 @@ public interface IAccountsContract
     // Task<UnitResult<ErrorList>> RegisterUser(
     //     RegisterUserRequest request, CancellationToken cancellation = default);
 
-    Task<HashSet<string>> GetUserPermissionCodes(Guid userId);
+    Task<HashSet<string>> GetUserPermissionCodes(Guid userId, CancellationToken cancellationToken);
 }

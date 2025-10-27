@@ -19,7 +19,7 @@ public class AccountsSeederService(
     ILogger<AccountsSeederService> logger)
 {
     private readonly AdminOptions _adminOptions = adminOptions.Value;
-    public async Task SeedAsync()
+    public async Task SeedAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Seeding accounts...");
         
@@ -29,7 +29,7 @@ public class AccountsSeederService(
         var seedDate = JsonSerializer.Deserialize<RolePermissionOptions>(json)
                        ?? throw new ApplicationException("Could not deserialize role permission config.");
 
-        await SeedPermissions(seedDate);
+        await SeedPermissions(seedDate, cancellationToken);
         
         await SeedRole(seedDate);
         
@@ -75,11 +75,11 @@ public class AccountsSeederService(
         logger.LogInformation("Roles added to database.");
     }
 
-    private async Task SeedPermissions(RolePermissionOptions seedDate)
+    private async Task SeedPermissions(RolePermissionOptions seedDate, CancellationToken cancellationToken)
     {
         var permissionsToAdd = seedDate.Permissions.SelectMany(group => group.Value);
 
-        await permissionManager.AddRangeIfExist(permissionsToAdd);
+        await permissionManager.AddRangeIfExist(permissionsToAdd, cancellationToken);
         
         logger.LogInformation("Permissions added to database.");
     }

@@ -1,5 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Accounts.Contracts;
 using PetFamily.Shared.Core.Models;
@@ -29,7 +28,7 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttri
             return;
         }
         
-        var permissions = await accountsContract.GetUserPermissionCodes(userId);
+        var permissions = await accountsContract.GetUserPermissionCodes(userId, default);
 
         if (permissions.Contains(permission.Code))
         {
