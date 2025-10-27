@@ -51,4 +51,40 @@ public static class Errors
             return Error.Validation("record.already.exist", "breed already exist");
         }
     }
+    
+    public static class Tokens
+    {
+        public static Error ExpiredToken()
+        {
+            return Error.Validation("token.is.expired", "Your token is expired");
+        }
+        
+        public static Error InvalidToken()
+        {
+            return Error.Validation("token.is.invalid", "Your token is invalid");
+        }
+    }
+    
+    public static class AuthErrors
+    {
+        public static Error InvalidCredentials()
+        {
+            return Error.Validation("credentials.is.invalid", "Неверные учетные данные");
+        }
+
+        public static Error InvalidRole()
+        {
+            return Error.Failure("role.is.invalid", "Неверная роль пользователя");
+        }
+
+        public static Error InvalidToken()
+        {
+            return Error.Validation("token.is.invalid", "Ваш токен недействителен");
+        }
+
+        public static Error ExpiredToken()
+        {
+            return Error.Validation("token.is.expired", "Ваш токен истек");
+        }
+    }
 }

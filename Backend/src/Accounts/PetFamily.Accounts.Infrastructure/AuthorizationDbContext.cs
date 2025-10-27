@@ -19,6 +19,8 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
     public DbSet<ParticipantAccount> ParticipantAccounts => Set<ParticipantAccount>();
     public DbSet<VolunteerAccount> VolunteerAccounts => Set<VolunteerAccount>();
     
+    public DbSet<RefreshSession> RefreshSession => Set<RefreshSession>();
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(configuration.GetConnectionString("Database"));
@@ -33,6 +35,14 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
         base.OnModelCreating(modelBuilder);
         
         modelBuilder.HasDefaultSchema("accounts");
+        
+        modelBuilder.Entity<RefreshSession>()
+            .ToTable("refresh_session");
+
+        modelBuilder.Entity<RefreshSession>()
+            .HasOne(r => r.User)
+            .WithMany()
+            .HasForeignKey(r => r.UserId);
         
         modelBuilder.Entity<User>()
             .ToTable("users");

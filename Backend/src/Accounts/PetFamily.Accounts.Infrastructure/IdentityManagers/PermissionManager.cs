@@ -10,20 +10,22 @@ public class PermissionManager(AuthorizationDbContext accountsContext)
         return await accountsContext.Permissions.FirstOrDefaultAsync(p => p.Code == code);
     }
     
-    public async Task AddRangeIfExist(IEnumerable<string> permissions)
+    public async Task AddRangeIfExist(IEnumerable<string> permissions, CancellationToken cancellationToken)
     {
         foreach (var permissionCode in permissions)
         {
-            var isPermissionExist = await accountsContext.Permissions.AnyAsync(p => p.Code == permissionCode);
+            var isPermissionExist = await accountsContext.Permissions
+                .AnyAsync(p => p.Code == permissionCode, cancellationToken);
+
             if (isPermissionExist)
                 continue;
 
-            await accountsContext.Permissions.AddAsync(new Permission { Code = permissionCode });
+            await accountsContext.Permissions.AddAsync(new Permission { Code = permissionCode }, cancellationToken);
         }
-        await accountsContext.SaveChangesAsync();
+        await accountsContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<HashSet<string>> GetUserPermissions(Guid userId)
+    public async Task<HashSet<string>> GetUserPermissions(Guid userId, CancellationToken cancellationToken)
     {
         var permissions = await accountsContext.Users
             .Include(r => r.Roles)
@@ -31,7 +33,7 @@ public class PermissionManager(AuthorizationDbContext accountsContext)
             .SelectMany(r => r.Roles)
             .SelectMany(rp => rp.RolePermissions)
             .Select(p => p.Permission.Code)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
         
         return permissions.ToHashSet();
     }

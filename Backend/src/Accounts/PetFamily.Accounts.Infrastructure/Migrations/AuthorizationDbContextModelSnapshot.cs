@@ -284,6 +284,42 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.ToTable("participant_accounts", "accounts");
                 });
 
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Users.RefreshSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("ExpiresIn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_in");
+
+                    b.Property<Guid>("Jti")
+                        .HasColumnType("uuid")
+                        .HasColumnName("jti");
+
+                    b.Property<Guid>("RefreshToken")
+                        .HasColumnType("uuid")
+                        .HasColumnName("refresh_token");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_refresh_session");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_refresh_session_user_id");
+
+                    b.ToTable("refresh_session", "accounts");
+                });
+
             modelBuilder.Entity("PetFamily.Accounts.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -499,6 +535,18 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_participant_accounts_users_user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Users.RefreshSession", b =>
+                {
+                    b.HasOne("PetFamily.Accounts.Domain.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_refresh_session_users_user_id");
 
                     b.Navigation("User");
                 });

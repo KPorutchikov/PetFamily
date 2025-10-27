@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +13,7 @@ using PetFamily.Accounts.Infrastructure.IdentityManagers;
 using PetFamily.Accounts.Infrastructure.Options;
 using PetFamily.Accounts.Infrastructure.Seeding;
 using PetFamily.Shared.Core.Abstractions;
+using PetFamily.Shared.Framework.Factory;
 
 namespace PetFamily.Accounts.Infrastructure;
 
@@ -26,17 +26,18 @@ public static class DependencyInjection
     {
         services.AddOptions<JwtOptions>();
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.JWT));
+        services.AddOptions<RefreshTokenOptions>();
+        services.Configure<RefreshTokenOptions>(configuration.GetSection(RefreshTokenOptions.REFRESH_SESSION));
         services.Configure<AdminOptions>(configuration.GetSection(AdminOptions.ADMIN));
         services.AddTransient<ITokenProvider, JwtTokenProvider>();
         services.AddScoped<LoginHandler>();
         services.AddScoped<IParticipantAccountManager, ParticipantAccountManager>();
+        services.AddScoped<IRefreshSessionManager, RefreshSessionManager>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<AuthorizationDbContext>();
         services.AddSingleton<AccountsSeeder>();
         services.AddScoped<AccountsSeederService>();
-
-        services.RegisterIdentity(configuration);
 
         services.AddAuthorization(options =>
         {
@@ -52,6 +53,8 @@ public static class DependencyInjection
             });
         });
 
+        services.RegisterIdentity(configuration);
+        
         return services;
     }
 
@@ -76,17 +79,7 @@ public static class DependencyInjection
                 var jwtOptions = configuration.GetSection(JwtOptions.JWT).Get<JwtOptions>()
                                  ?? throw new ApplicationException("Missing JWT configuration");
 
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidIssuer = jwtOptions.Issuer,
-                    ValidAudience = jwtOptions.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero
-                };
+                options.TokenValidationParameters = TokenValidationParametersFactory.CreateWithLifeTime(jwtOptions);
             });
 
         services.AddScoped<PermissionManager>();
@@ -100,4 +93,5 @@ public static class DependencyInjection
             options.User.RequireUniqueEmail = true;
         });
     }
+   
 }
