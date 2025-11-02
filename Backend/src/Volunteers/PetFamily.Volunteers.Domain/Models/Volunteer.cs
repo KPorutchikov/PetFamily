@@ -2,13 +2,13 @@
 using PetFamily.Shared.Core.Shared;
 using PetFamily.Shared.SharedKernel;
 using PetFamily.Shared.SharedKernel.ValueObjects.Ids;
+using PetFamily.Volunteers.Domain.Entities;
 using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Volunteers.Domain.Models;
 
-public class Volunteer : Entity<VolunteerId>
+public class Volunteer : SoftDeletableEntity<VolunteerId>
 {
-    private bool _isDeleted = false;
     private List<Pet> _pets = [];
     public IReadOnlyList<Pet> Pets => _pets;
 
@@ -109,28 +109,20 @@ public class Volunteer : Entity<VolunteerId>
         ExperienceInYears = experienceInYears;
     }
 
-    public void SoftDelete()
+    public override void Delete()
     {
-        if (_isDeleted == false)
-        {
-            _isDeleted = true;
-            foreach (var pet in _pets)
-            {
-                pet.SoftDelete();
-            }
-        }
+        base.Delete();
+        
+        foreach (var pet in _pets)
+            pet.Delete();
     }
 
-    public void Restore()
+    public override void Restore()
     {
-        if (_isDeleted)
-        {
-            _isDeleted = false;
-            foreach (var pet in _pets)
-            {
-                pet.Restore();
-            }
-        }
+        base.Restore();
+        
+        foreach (var pet in _pets)
+            pet.Restore();
     }
 
     public static Result<Volunteer, Error> Create(

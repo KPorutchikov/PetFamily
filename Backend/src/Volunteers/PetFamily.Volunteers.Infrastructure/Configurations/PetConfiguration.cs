@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Shared.Core.Shared;
 using PetFamily.Shared.SharedKernel;
 using PetFamily.Shared.SharedKernel.ValueObjects.Ids;
-using PetFamily.Volunteers.Domain;
 using PetFamily.Volunteers.Domain.Models;
 
 namespace PetFamily.Volunteers.Infrastructure.Configurations;
@@ -128,10 +127,6 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property(p => p.CreatedDate)
             .IsRequired()
             .HasColumnName("created_date");
-
-        builder.Property<bool>("_isDeleted")
-            .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasColumnName("is_deleted");
 
         builder.Property(p => p.PetPhoto)
             .IsRequired(false)

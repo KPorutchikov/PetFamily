@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Shared.SharedKernel;
 using PetFamily.Shared.SharedKernel.ValueObjects.Ids;
-using PetFamily.Volunteers.Domain;
 using PetFamily.Volunteers.Domain.Models;
 
 namespace PetFamily.Volunteers.Application;
@@ -14,7 +13,7 @@ public interface IVolunteerRepository
     
     Guid HardDelete(Volunteer volunteer, CancellationToken cancellationToken = default);
     
-    Task<Guid> SoftDelete(Volunteer volunteer, CancellationToken cancellationToken = default);
+    Guid SoftDelete(Volunteer volunteer, CancellationToken cancellationToken = default);
     
     Guid HardDeletePet(Pet volunteer, CancellationToken cancellationToken = default);
 
