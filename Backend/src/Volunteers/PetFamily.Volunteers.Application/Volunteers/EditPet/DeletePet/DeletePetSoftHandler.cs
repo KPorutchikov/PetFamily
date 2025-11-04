@@ -38,7 +38,7 @@ public class DeletePetSoftHandler
         if (pet.IsFailure)
             return pet.Error.ToErrorList();
 
-        pet.Value.SoftDelete();
+        pet.Value.Delete();
         
         await _unitOfWork.SaveChanges(ct);
         

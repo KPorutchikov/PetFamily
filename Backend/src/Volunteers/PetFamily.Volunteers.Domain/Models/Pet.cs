@@ -2,14 +2,13 @@
 using PetFamily.Shared.Core.Shared;
 using PetFamily.Shared.SharedKernel;
 using PetFamily.Shared.SharedKernel.ValueObjects.Ids;
+using PetFamily.Volunteers.Domain.Entities;
 using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Volunteers.Domain.Models;
 
-public class Pet : Entity<PetId>
+public class Pet : SoftDeletableEntity<PetId>
 {
-    private bool _isDeleted = false;
-    public bool IsDeleted => _isDeleted;
     public string Name { get; private set; }
     public PetBreed Breed { get; private set; }
     public string Description { get; private set; }
@@ -90,17 +89,6 @@ public class Pet : Entity<PetId>
     public void SetSerialNumber(SerialNumber serialNumber)
     {
         SerialNumber = serialNumber;
-    }
-
-    public void SoftDelete()
-    {
-        _isDeleted = true;
-    }
-
-    public void Restore()
-    {
-        if (_isDeleted)
-            _isDeleted = false;
     }
 
     public static Result<Pet, Error> Create(PetId id, string name, PetBreed breed, string description, string color,

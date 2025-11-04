@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PetFamily.Species.Infrastructure;
 using PetFamily.Species.Infrastructure.Database;
 
 #nullable disable
@@ -23,7 +22,7 @@ namespace PetFamily.Species.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Breed", b =>
+            modelBuilder.Entity("PetFamily.Species.Domain.Models.Breed", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -48,7 +47,7 @@ namespace PetFamily.Species.Infrastructure.Migrations
                     b.ToTable("breed", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Species", b =>
+            modelBuilder.Entity("PetFamily.Species.Domain.Models.Species", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -72,16 +71,16 @@ namespace PetFamily.Species.Infrastructure.Migrations
                     b.ToTable("species", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Breed", b =>
+            modelBuilder.Entity("PetFamily.Species.Domain.Models.Breed", b =>
                 {
-                    b.HasOne("PetFamily.Species.Domain.Species", null)
+                    b.HasOne("PetFamily.Species.Domain.Models.Species", null)
                         .WithMany("Breeds")
                         .HasForeignKey("species_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_breed_species_species_id");
                 });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Species", b =>
+            modelBuilder.Entity("PetFamily.Species.Domain.Models.Species", b =>
                 {
                     b.Navigation("Breeds");
                 });

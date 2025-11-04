@@ -40,21 +40,15 @@ public class DeletePetHardHandler : ICommandHandler<Guid,DeletePetCommand>
         if (validationResult.IsValid == false)
             return validationResult.ToErrorList();
 
-        var transaction = await _unitOfWork.BeginTransaction(ct);
+        await using var transaction = await _unitOfWork.BeginTransaction(ct);
         try
         {
             var pet = await _volunteerRepository.GetPetById(command.PetId, ct);
             if (pet.IsFailure)
                 return pet.Error.ToErrorList();
-        
-            var volunteer = await _volunteerRepository.GetByPetId(command.PetId, ct);
-            if (volunteer.IsFailure)
-                return volunteer.Error.ToErrorList();
-            
-            volunteer.Value.DeletePet(command.PetId);
-            
+
             _volunteerRepository.HardDeletePet(pet.Value, ct);
-            
+
             await _unitOfWork.SaveChanges(ct);
 
             foreach (var file in pet.Value.Files?.Values.ToList()! ?? Enumerable.Empty<PetFile>())
@@ -63,8 +57,8 @@ public class DeletePetHardHandler : ICommandHandler<Guid,DeletePetCommand>
             }
 
             _logger.LogInformation("Pet was deleted (hard) with id: {Id}.", command.PetId);
-            
-            transaction.Commit();
+
+            await transaction.CommitAsync(ct);
 
             return command.PetId;
         }
@@ -72,7 +66,7 @@ public class DeletePetHardHandler : ICommandHandler<Guid,DeletePetCommand>
         {
             _logger.LogError(ex, "Can not delete pet - {id} in transaction", command.PetId);
 
-            transaction.Rollback();
+            await transaction.RollbackAsync(ct);
 
             return Error.Failure("Can not delete pet", "volunteer.pet.failure").ToErrorList();
         }

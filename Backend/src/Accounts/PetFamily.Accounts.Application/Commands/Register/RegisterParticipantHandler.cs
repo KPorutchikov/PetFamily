@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Domain.Roles;
@@ -18,7 +19,7 @@ public class RegisterParticipantHandler : ICommandHandler<RegisterParticipantCom
     private readonly ILogger<RegisterParticipantHandler> _logger;
 
     public RegisterParticipantHandler(
-        IUnitOfWork unitOfWork,
+        [FromKeyedServices(Modules.Accounts)] IUnitOfWork unitOfWork,
         IParticipantAccountManager participantAccountManager,
         UserManager<User> userManager,
         RoleManager<Role> roleManager,

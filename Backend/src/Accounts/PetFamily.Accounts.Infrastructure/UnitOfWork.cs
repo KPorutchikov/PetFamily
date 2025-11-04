@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
 using Microsoft.EntityFrameworkCore.Storage;
 using PetFamily.Shared.Core.Abstractions;
 
@@ -25,5 +24,4 @@ public class UnitOfWork : IUnitOfWork
     {
         await _accountsDbContext.SaveChangesAsync(cancellationToken);
     }
-    
 }

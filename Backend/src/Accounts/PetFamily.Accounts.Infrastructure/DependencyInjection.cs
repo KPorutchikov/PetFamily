@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application;
 using PetFamily.Accounts.Application.Commands.Login;
 using PetFamily.Accounts.Domain;
@@ -14,6 +13,7 @@ using PetFamily.Accounts.Infrastructure.Options;
 using PetFamily.Accounts.Infrastructure.Seeding;
 using PetFamily.Shared.Core.Abstractions;
 using PetFamily.Shared.Framework.Factory;
+using PetFamily.Shared.SharedKernel;
 
 namespace PetFamily.Accounts.Infrastructure;
 
@@ -33,7 +33,7 @@ public static class DependencyInjection
         services.AddScoped<LoginHandler>();
         services.AddScoped<IParticipantAccountManager, ParticipantAccountManager>();
         services.AddScoped<IRefreshSessionManager, RefreshSessionManager>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddKeyedScoped<IUnitOfWork, UnitOfWork>(Modules.Accounts);
 
         services.AddScoped<AuthorizationDbContext>();
         services.AddSingleton<AccountsSeeder>();

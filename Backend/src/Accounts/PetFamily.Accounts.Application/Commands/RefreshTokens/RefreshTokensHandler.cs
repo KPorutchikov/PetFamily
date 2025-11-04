@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Accounts.Contracts.Responses;
 using PetFamily.Shared.Core.Abstractions;
 using PetFamily.Shared.Core.Models;
@@ -12,7 +13,10 @@ public class RefreshTokensHandler : ICommandHandler<LoginResponse, RefreshTokens
     private readonly ITokenProvider _tokenProvider;
     private readonly IUnitOfWork _unitOfWork;
 
-    public RefreshTokensHandler(IRefreshSessionManager refreshSessionManager, ITokenProvider tokenProvider, IUnitOfWork unitOfWork)
+    public RefreshTokensHandler(
+        IRefreshSessionManager refreshSessionManager, 
+        ITokenProvider tokenProvider, 
+        [FromKeyedServices(Modules.Accounts)] IUnitOfWork unitOfWork)
     {
         _refreshSessionManager = refreshSessionManager;
         _tokenProvider = tokenProvider;

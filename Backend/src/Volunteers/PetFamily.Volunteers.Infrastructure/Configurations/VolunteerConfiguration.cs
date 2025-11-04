@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Shared.SharedKernel;
 using PetFamily.Shared.SharedKernel.ValueObjects.Ids;
-using PetFamily.Volunteers.Domain;
 using PetFamily.Volunteers.Domain.Models;
 
 namespace PetFamily.Volunteers.Infrastructure.Configurations;
@@ -91,9 +90,5 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                     .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
             });
         });
-
-        builder.Property<bool>("_isDeleted")
-            .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasColumnName("is_deleted");
     }
 }

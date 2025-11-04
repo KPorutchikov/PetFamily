@@ -32,9 +32,9 @@ public class VolunteerRepository : IVolunteerRepository
         return volunteer.Id;
     }
 
-    public async Task<Guid> SoftDelete(Volunteer volunteer, CancellationToken cancellationToken = default)
+    public Guid SoftDelete(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
-        volunteer.SoftDelete();
+        volunteer.Delete();
 
         return volunteer.Id;
     }

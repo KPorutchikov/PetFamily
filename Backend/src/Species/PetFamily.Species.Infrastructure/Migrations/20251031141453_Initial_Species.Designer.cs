@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PetFamily.Species.Infrastructure;
 using PetFamily.Species.Infrastructure.Database;
 
 #nullable disable
@@ -13,8 +12,8 @@ using PetFamily.Species.Infrastructure.Database;
 namespace PetFamily.Species.Infrastructure.Migrations
 {
     [DbContext(typeof(SpeciesDbContext))]
-    [Migration("20250814162329_Species_Initial")]
-    partial class Species_Initial
+    [Migration("20251031141453_Initial_Species")]
+    partial class Initial_Species
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +25,7 @@ namespace PetFamily.Species.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Breed", b =>
+            modelBuilder.Entity("PetFamily.Species.Domain.Models.Breed", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -51,7 +50,7 @@ namespace PetFamily.Species.Infrastructure.Migrations
                     b.ToTable("breed", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Species", b =>
+            modelBuilder.Entity("PetFamily.Species.Domain.Models.Species", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -75,16 +74,16 @@ namespace PetFamily.Species.Infrastructure.Migrations
                     b.ToTable("species", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Breed", b =>
+            modelBuilder.Entity("PetFamily.Species.Domain.Models.Breed", b =>
                 {
-                    b.HasOne("PetFamily.Species.Domain.Species", null)
+                    b.HasOne("PetFamily.Species.Domain.Models.Species", null)
                         .WithMany("Breeds")
                         .HasForeignKey("species_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_breed_species_species_id");
                 });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Species", b =>
+            modelBuilder.Entity("PetFamily.Species.Domain.Models.Species", b =>
                 {
                     b.Navigation("Breeds");
                 });
