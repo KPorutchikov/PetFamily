@@ -34,6 +34,7 @@ public static class DependencyInjection
         services.AddScoped<IParticipantAccountManager, ParticipantAccountManager>();
         services.AddScoped<IRefreshSessionManager, RefreshSessionManager>();
         services.AddKeyedScoped<IUnitOfWork, UnitOfWork>(Modules.Accounts);
+        services.AddScoped<IAccountsRepository, AccountsRepository>();
 
         services.AddScoped<AuthorizationDbContext>();
         services.AddSingleton<AccountsSeeder>();

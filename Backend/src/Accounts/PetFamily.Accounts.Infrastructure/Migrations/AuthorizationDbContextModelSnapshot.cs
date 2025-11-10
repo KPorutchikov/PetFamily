@@ -518,7 +518,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.Users.AdminAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.Users.User", "User")
-                        .WithOne()
+                        .WithOne("AdminAccount")
                         .HasForeignKey("PetFamily.Accounts.Domain.Users.AdminAccount", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -530,7 +530,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.Users.ParticipantAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.Users.User", "User")
-                        .WithOne()
+                        .WithOne("ParticipantAccount")
                         .HasForeignKey("PetFamily.Accounts.Domain.Users.ParticipantAccount", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -554,7 +554,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.Users.VolunteerAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.Users.User", "User")
-                        .WithOne()
+                        .WithOne("VolunteerAccount")
                         .HasForeignKey("PetFamily.Accounts.Domain.Users.VolunteerAccount", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -566,6 +566,15 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.Roles.Role", b =>
                 {
                     b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Users.User", b =>
+                {
+                    b.Navigation("AdminAccount");
+
+                    b.Navigation("ParticipantAccount");
+
+                    b.Navigation("VolunteerAccount");
                 });
 #pragma warning restore 612, 618
         }

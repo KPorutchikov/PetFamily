@@ -8,6 +8,9 @@ public class User : IdentityUser<Guid>
     private User()
     {
     }
+    public AdminAccount? AdminAccount { get; set; }
+    public ParticipantAccount? ParticipantAccount { get; set; }
+    public VolunteerAccount? VolunteerAccount { get; set; }
     
     private List<Role> _roles = [];
     public IReadOnlyList<Role> Roles => _roles;

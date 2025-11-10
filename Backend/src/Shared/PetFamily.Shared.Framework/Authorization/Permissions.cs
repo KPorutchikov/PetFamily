@@ -19,4 +19,13 @@ public static class Permissions
         public const string SpeciesDelete = "species.delete";
         public const string SpeciesMove   = "species.move";
     }
+
+    public static class Account
+    {
+        public const string AccountRead   = "account.read";
+        public const string AccountCreate = "account.create";
+        public const string AccountUpdate = "account.update";
+        public const string AccountDelete = "account.delete";
+        public const string AccountMove   = "account.move";
+    }
 }

@@ -2,6 +2,7 @@
 using PetFamily.Accounts.Application.Commands.Login;
 using PetFamily.Accounts.Application.Commands.RefreshTokens;
 using PetFamily.Accounts.Application.Commands.Register;
+using PetFamily.Accounts.Application.Commands.Users;
 using PetFamily.Accounts.Contracts.Requests;
 using PetFamily.Shared.Framework;
 using PetFamily.Shared.Framework.Authorization;
@@ -58,6 +59,20 @@ public class AccountsController : ApplicationController
         if (result.IsFailure)
             return result.Error.ToResponse();
 
+        return Ok(result.Value);
+    }
+    
+    [Permission(Permissions.Account.AccountRead)]
+    [HttpGet("{id:guid}/info")]
+    public async Task<IActionResult> GetUser(
+        [FromRoute] Guid id,
+        [FromServices] GetUserHandler handel,
+        CancellationToken cancellationToken)
+    {
+        var result = await handel.Handle(new GetUserCommand(id), cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+        
         return Ok(result.Value);
     }
 }

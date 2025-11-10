@@ -13,4 +13,8 @@
       <ProjectReference Include="..\PetFamily.Accounts.Domain\PetFamily.Accounts.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="AccountManagement\Queries\" />
+    </ItemGroup>
+
 </Project>
