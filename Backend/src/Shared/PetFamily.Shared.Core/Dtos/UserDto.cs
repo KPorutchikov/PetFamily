@@ -20,6 +20,8 @@ public class UserAccountDto
 {
     public Guid IdAccount { get; init; }
     
+    public string FullName { get; init; } = string.Empty;
+    
     public UserAccountType AccountType { get; init; }
 }
 

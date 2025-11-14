@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetFamily.Accounts.Application.AccountManagement.Queries.Users.GetUser;
 using PetFamily.Accounts.Application.Commands.Login;
 using PetFamily.Accounts.Application.Commands.RefreshTokens;
 using PetFamily.Accounts.Application.Commands.Register;
@@ -66,13 +67,11 @@ public class AccountsController : ApplicationController
     [HttpGet("{id:guid}/info")]
     public async Task<IActionResult> GetUser(
         [FromRoute] Guid id,
-        [FromServices] GetUserHandler handel,
+        [FromServices] GetUserHandlerDapper handel,
         CancellationToken cancellationToken)
     {
-        var result = await handel.Handle(new GetUserCommand(id), cancellationToken);
-        if (result.IsFailure)
-            return result.Error.ToResponse();
+        var result = await handel.Handle(new GetUserQuery(id), cancellationToken);
         
-        return Ok(result.Value);
+        return Ok(result);
     }
 }
