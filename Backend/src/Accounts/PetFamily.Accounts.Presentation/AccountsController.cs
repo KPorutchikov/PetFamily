@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetFamily.Accounts.Application.AccountManagement.Queries.Users.GetUser;
 using PetFamily.Accounts.Application.Commands.Login;
 using PetFamily.Accounts.Application.Commands.RefreshTokens;
 using PetFamily.Accounts.Application.Commands.Register;
+using PetFamily.Accounts.Application.Commands.Users;
 using PetFamily.Accounts.Contracts.Requests;
 using PetFamily.Shared.Framework;
 using PetFamily.Shared.Framework.Authorization;
@@ -59,5 +61,17 @@ public class AccountsController : ApplicationController
             return result.Error.ToResponse();
 
         return Ok(result.Value);
+    }
+    
+    [Permission(Permissions.Account.AccountRead)]
+    [HttpGet("{id:guid}/info")]
+    public async Task<IActionResult> GetUser(
+        [FromRoute] Guid id,
+        [FromServices] GetUserHandlerDapper handel,
+        CancellationToken cancellationToken)
+    {
+        var result = await handel.Handle(new GetUserQuery(id), cancellationToken);
+        
+        return Ok(result);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace PetFamily.Accounts.Domain.Users;
+﻿using System.Text.Json.Serialization;
+
+namespace PetFamily.Accounts.Domain.Users;
 
 public class AdminAccount
 {
@@ -19,5 +21,7 @@ public class AdminAccount
     public string FullName { get; set; }
     
     public Guid UserId { get; set; }
+    
+    [JsonIgnore]
     public User User { get; set; }
 }

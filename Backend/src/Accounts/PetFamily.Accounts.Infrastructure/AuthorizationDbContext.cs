@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +45,7 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
         
         modelBuilder.Entity<User>()
             .ToTable("users");
-
+        
         modelBuilder.Entity<User>()
             .HasMany(u => u.Roles)
             .WithMany()
@@ -60,17 +59,17 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
 
         modelBuilder.Entity<VolunteerAccount>()
             .HasOne(u => u.User)
-            .WithOne()
+            .WithOne(v => v.VolunteerAccount)
             .HasForeignKey<VolunteerAccount>(u => u.UserId);
         
         modelBuilder.Entity<ParticipantAccount>()
             .HasOne(u => u.User)
-            .WithOne()
+            .WithOne(p => p.ParticipantAccount)
             .HasForeignKey<ParticipantAccount>(u => u.UserId);
         
         modelBuilder.Entity<AdminAccount>()
             .HasOne(u => u.User)
-            .WithOne()
+            .WithOne(a => a.AdminAccount)
             .HasForeignKey<AdminAccount>(u => u.UserId);
         
         modelBuilder.Entity<Role>()

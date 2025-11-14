@@ -1,4 +1,4 @@
-﻿using PetFamily.Accounts.Domain.ValueObjects;
+﻿using System.Text.Json.Serialization;
 
 namespace PetFamily.Accounts.Domain.Users;
 
@@ -23,5 +23,7 @@ public class VolunteerAccount
     public string Experience { get; set; }
     
     public Guid UserId { get; set; }
+    
+    [JsonIgnore]
     public User User { get; set; }
 }

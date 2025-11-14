@@ -10,7 +10,12 @@
       "species.create",
       "species.update",
       "species.delete",
-      "species.move"
+      "species.move",
+      "account.read",
+      "account.create",
+      "account.update",
+      "account.delete",
+      "account.move"      
     ],
     "Participant": [
       "volunteer.read",
@@ -38,6 +43,13 @@
       "species.update",
       "species.delete",
       "species.move"
+    ],
+    "Account": [
+      "account.read",
+      "account.create",
+      "account.update",
+      "account.delete",
+      "account.move"
     ]
   }
 }

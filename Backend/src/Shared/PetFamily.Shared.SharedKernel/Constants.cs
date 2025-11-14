@@ -13,3 +13,10 @@ public enum Modules
     Species,
     Accounts
 }
+
+public enum UserAccountType
+{
+    Admin,
+    Volunteers,
+    Participant
+}
